@@ -92,7 +92,11 @@ void gui_init_argon_menu(void)
 
     gui_menu_t* menu = gui_menu_create("ArgonNX");
 
-    generate_payloads_entries(dirlist(PAYLOADS_DIR, "*.bin", false), menu);
+//   generate_payloads_entries(dirlist(PAYLOADS_DIR, "*.bin", false), menu);
+	
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/argon/Icons/boot-CFW.bmp"),1, 150, 400, 400,(int (*)(void *))launch_payload, (void*)"/argon/Icons/Atmosphere.bin"));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/argon/Icons/boot-Stock.bmp"),450, 150, 400, 400, NULL, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("/argon/Icons/gear.bmp"),880, 150, 400, 400, NULL, NULL));
 
      gui_menu_append_entry(menu, 
             gui_create_menu_entry_no_bitmap("Screenshot", 700, 680, 150, 100, (int (*)(void *))screenshot, NULL));
