@@ -33,10 +33,10 @@
 
 #include "mem/heap.h"
 
-#define COLUMNS 4  
-#define ROWS 2
+#define COLUMNS 3  
+#define ROWS 1
 #define ELEM_SIZE 230
-#define MARGIN_TOP 130
+#define MARGIN_TOP 330
 #define MARGIN_LEFT 45
 
 static int tool_reboot_rcm(void* param);
