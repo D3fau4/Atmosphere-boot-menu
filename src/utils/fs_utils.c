@@ -17,10 +17,10 @@
  */
 
 #include "utils/fs_utils.h"
-
+#include "utils/util.h"
+#include "gfx/di.h"
 #include "mem/heap.h"
 #include "gfx/gfx.h"
-#include <string.h>
 
 bool sd_mount()
 {
@@ -29,7 +29,10 @@ bool sd_mount()
 
 	if (!sdmmc_storage_init_sd(&g_sd_storage, &g_sd_sdmmc, SDMMC_1, SDMMC_BUS_WIDTH_4, 11))
 	{
+		display_backlight_brightness(100, 1000);
+        gfx_printf(&g_gfx_con, "-\n", 0xFFFFDD00, 0xFFCCCCCC);
         gfx_printf(&g_gfx_con, "%kFailed to init SD card.\nMake sure that it is inserted.\nOr that SD reader is properly seated!%k\n", 0xFFFFDD00, 0xFFCCCCCC);
+//		msleep(3000);
 	}
 	else
 	{
@@ -42,7 +45,8 @@ bool sd_mount()
 		}
 		else
 		{
-            gfx_printf(&g_gfx_con, "%kFailed to mount SD card (FatFS Error %d).\nMake sure that a FAT partition exists..%k\n", 0xFFFFDD00, res, 0xFFCCCCCC);
+        gfx_printf(&g_gfx_con, "-\n", 0xFFFFDD00, 0xFFCCCCCC);
+        gfx_printf(&g_gfx_con, "%kFailed to mount SD card (FatFS Error %d).\nMake sure that a FAT partition exists..%k\n", 0xFFFFDD00, res, 0xFFCCCCCC);
 		}
 	}
 
@@ -119,24 +123,14 @@ bool sd_file_exists(const char* filename)
     return false;
 }
 
-void flipVertically(unsigned char* pixels_buffer, const unsigned int width, const unsigned int height, const int bytes_per_pixel)
+void copyfile(const char* source, const char* target)
 {
-    const unsigned int rows = height / 2; // Iterate only half the buffer to get a full flip
-    const unsigned int row_stride = width * bytes_per_pixel;
-    unsigned char* temp_row = (unsigned char*)malloc(row_stride);
+        FIL fp;
+        if (f_open(&fp, source, FA_READ) != FR_OK)
+                return NULL;
 
-    int source_offset, target_offset;
+        u32 size = f_size(&fp);
+	f_close(&fp);
 
-    for (int rowIndex = 0; rowIndex < rows; rowIndex++)
-    {
-        source_offset = rowIndex * row_stride;
-        target_offset = (height - rowIndex - 1) * row_stride;
-
-        memcpy(temp_row, pixels_buffer + source_offset, row_stride);
-        memcpy(pixels_buffer + source_offset, pixels_buffer + target_offset, row_stride);
-        memcpy(pixels_buffer + target_offset, temp_row, row_stride);
-    }
-
-    free(temp_row);
-    temp_row = NULL;
+	sd_save_to_file(sd_file_read(source),size,target);
 }
