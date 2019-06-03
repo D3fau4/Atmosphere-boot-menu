@@ -44,48 +44,6 @@ static int tool_power_off(void* param);
 //static int tool_ams(void* param);
 
 
-/* Generate entries dynamically *//*
-static void generate_payloads_entries(char* payloads, gui_menu_t* menu)
-{
-    if (payloads == NULL)
-    {
-        g_gfx_con.scale = 4;
-        gfx_con_setpos(&g_gfx_con, 140, 250);
-        gfx_printf(&g_gfx_con, "Payloads directory is empty...\n");
-        
-        g_gfx_con.scale = 3;
-        gfx_con_setpos(&g_gfx_con, 110, 370);
-        gfx_printf(&g_gfx_con, "Place your payloads inside \"%s\"", PAYLOADS_DIR);
-
-        return;
-    }
-
-    u32 i = 0;
-    // For each payload generate its logo, its name and its path
-    while(payloads[i * 256])
-    {
-        char* payload_path = (char*)malloc(256);
-        payload_full_path(&payloads[i * 256], payload_path);
-        
-        char payload_logo[256];
-        payload_logo_path(&payloads[i * 256], payload_logo);
-
-        u32 row = i / COLUMNS;
-        u32 col = i % COLUMNS;
-        u32 x = g_gfx_ctxt.width / COLUMNS * col + MARGIN_LEFT;
-        u32 y = g_gfx_ctxt.height / ROWS * row + MARGIN_TOP + (row == 0 ? 30 : -60);
-
-        const char* payload_wo_bin = str_replace(&payloads[i * 256], ".bin", "");
-        gui_menu_append_entry(menu, 
-            gui_create_menu_entry(payload_wo_bin,
-                                    sd_file_read(payload_logo), 
-                                    x, y,
-                                    200, 200,
-                                    (int (*)(void *))launch_payload, (void*)payload_path));
-        i++;
-    }
-}
-*/
 /* Init needed menus for ArgonNX */
 void gui_init_argon_menu(void)
 {
@@ -95,27 +53,35 @@ void gui_init_argon_menu(void)
 
     gui_menu_t* menu = gui_menu_create("ArgonNX");
 	
+	//show display without icons
     gui_menu_open2(menu);
+	
+	//waith user input
         bool cancel_auto_chainloading = btn_read() & BTN_VOL_UP;
-
         if (!cancel_auto_chainloading)
 		launch_payload("atmosphere/boot_menu/bin/fusee-primary.bin");
 
-    /* Clear all entries and menus */
 
 
-//   generate_payloads_entries(dirlist(PAYLOADS_DIR, "*.bin", false), menu);
-u32 iconH = 205;
-u32 buttonH = 500;
-u32 buttonW = 150;
+//create menu entries
 
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/boot-CFW.bmp"),100, iconH, 300, 300,(int (*)(void *))launch_payload, (void*)"atmosphere/boot_menu/bin/Atmosphere.bin"));
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/boot-Stock.bmp"),450, iconH, 300, 300,(int (*)(void *))launch_payload, (void*)"atmosphere/boot_menu/bin/stock.bin"));
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/gear.bmp"),800, iconH, 300, 300, NULL, NULL));
+u32 iconH = 300;
+u32 iconW = 300;
+u32 iconY = 180;
+u32 iconX = 125;
 
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/button.bmp"),buttonW, buttonH, 200, 75, NULL, NULL));
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/button.bmp"),buttonW + 350, buttonH, 200, 75, NULL, NULL));
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/button.bmp"),buttonW + 700, buttonH, 200, 75, NULL, NULL));
+u32 buttonH = 300;
+u32 buttonW = 100;
+u32 buttonY = iconY + 300;
+u32 buttonX = iconX;
+
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/boot-CFW.bmp"),iconX, iconY, iconW, iconH,(int (*)(void *))launch_payload, (void*)"atmosphere/boot_menu/bin/Atmosphere.bin"));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/boot-Stock.bmp"),iconX + 350, iconY, iconW, iconH,(int (*)(void *))launch_payload, (void*)"atmosphere/boot_menu/bin/stock.bin"));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/gear.bmp"),iconX + 700, iconY, iconW, iconH, NULL, NULL));
+
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/button.bmp"),buttonX,buttonY, buttonH, buttonW, NULL, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/button.bmp"),buttonX + 350, buttonY, buttonH, buttonW, NULL, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/button.bmp"),buttonX + 700, buttonY, buttonH, buttonW, NULL, NULL));
 
 
      gui_menu_append_entry(menu, 
