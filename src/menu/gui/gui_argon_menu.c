@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+#include "utils/btn.h"
 #include "menu/gui/gui_argon_menu.h"
 #include "menu/gui/gui_menu.h"
 #include "menu/gui/gui_menu_pool.h"
@@ -41,8 +41,10 @@
 
 static int tool_reboot_rcm(void* param);
 static int tool_power_off(void* param);
+//static int tool_ams(void* param);
 
-/* Generate entries dynamically */
+
+/* Generate entries dynamically *//*
 static void generate_payloads_entries(char* payloads, gui_menu_t* menu)
 {
     if (payloads == NULL)
@@ -59,7 +61,7 @@ static void generate_payloads_entries(char* payloads, gui_menu_t* menu)
     }
 
     u32 i = 0;
-    /* For each payload generate its logo, its name and its path */
+    // For each payload generate its logo, its name and its path
     while(payloads[i * 256])
     {
         char* payload_path = (char*)malloc(256);
@@ -83,20 +85,38 @@ static void generate_payloads_entries(char* payloads, gui_menu_t* menu)
         i++;
     }
 }
-
+*/
 /* Init needed menus for ArgonNX */
 void gui_init_argon_menu(void)
 {
+		
     /* Init pool for menu */
     gui_menu_pool_init();
 
     gui_menu_t* menu = gui_menu_create("ArgonNX");
+	
+    gui_menu_open2(menu);
+        bool cancel_auto_chainloading = btn_read() & BTN_VOL_UP;
+
+        if (!cancel_auto_chainloading)
+		launch_payload("atmosphere/boot_menu/bin/fusee-primary.bin");
+
+    /* Clear all entries and menus */
+
 
 //   generate_payloads_entries(dirlist(PAYLOADS_DIR, "*.bin", false), menu);
-	
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/boot-CFW.bmp"),125, 255, 300, 300,(int (*)(void *))launch_payload, (void*)"atmosphere/boot_menu/bin/Atmosphere.bin"));
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/boot-Stock.bmp"),450, 255, 300, 300,(int (*)(void *))launch_payload, (void*)"atmosphere/boot_menu/bin/stock.bin"));
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/gear.bmp"),800, 255, 300, 300, NULL, NULL));
+u32 iconH = 205;
+u32 buttonH = 500;
+u32 buttonW = 150;
+
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/boot-CFW.bmp"),100, iconH, 300, 300,(int (*)(void *))launch_payload, (void*)"atmosphere/boot_menu/bin/Atmosphere.bin"));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/boot-Stock.bmp"),450, iconH, 300, 300,(int (*)(void *))launch_payload, (void*)"atmosphere/boot_menu/bin/stock.bin"));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/gear.bmp"),800, iconH, 300, 300, NULL, NULL));
+
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/button.bmp"),buttonW, buttonH, 200, 75, NULL, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/button.bmp"),buttonW + 350, buttonH, 200, 75, NULL, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/button.bmp"),buttonW + 700, buttonH, 200, 75, NULL, NULL));
+
 
      gui_menu_append_entry(menu, 
             gui_create_menu_entry_no_bitmap("Screenshot", 700, 680, 150, 100, (int (*)(void *))screenshot, NULL));
@@ -114,7 +134,15 @@ gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boo
     /* Clear all entries and menus */
     gui_menu_pool_cleanup();
 }
-
+/*
+static int tool_ams(void* param)
+{
+	display_backlight_brightness(1, 1000);
+	copyfile("atmosphere/fusee-secondary.bin","sept/payload.bin");
+	launch_payload("atmosphere/boot_menu/bin/Atmosphere.bin");
+    return 0;
+}
+*/
 static int tool_reboot_rcm(void* param)
 {
     gui_menu_pool_cleanup();

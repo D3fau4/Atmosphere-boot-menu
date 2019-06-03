@@ -71,18 +71,10 @@ void ipl_main()
     /* Cofigure touch input */
     touch_power_on();
     
-    /* Mount Sd card and launch payload */
+    /* Mount Sd card and init */
     if (sd_mount())
     {
-        bool cancel_auto_chainloading = btn_read() & BTN_VOL_UP;
-        bool load_menu = cancel_auto_chainloading || launch_payload("atmosphere/boot_menu/bin/fusee-primary.bin");
-        
-        gfx_printf(&g_gfx_con, "Autochainload canceled. Loading menu...\n");
-        gfx_swap_buffer(&g_gfx_ctxt);
-
-        if (load_menu)
-            gui_init_argon_menu();
-
+        gui_init_argon_menu();
     } else {
         gfx_printf(&g_gfx_con, "No sd card found...\n");
     }
