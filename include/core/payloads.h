@@ -18,8 +18,8 @@
 
 #include "utils/types.h"
 
-#define PAYLOADS_DIR "argon/payloads"
-#define PAYLOADS_LOGOS_DIR "argon/logos"
+#define PAYLOADS_DIR "atmosphere/boot_menu/bin"
+#define PAYLOADS_LOGOS_DIR "atmosphere/boot_menu/gfx/"
 
 /* Generate full pyload directory */
 void payload_full_path(const char*, char*);

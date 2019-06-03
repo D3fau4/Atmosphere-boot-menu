@@ -100,11 +100,11 @@ int screenshot(void* params)
     u8* buff = (u8*)malloc(imagesize + 54);
     memcpy(buff, header, 54);
     memcpy(buff + 54, g_gfx_ctxt.fb, imagesize);
-    sd_save_to_file(buff, imagesize + 54, "argon/screenshot.bmp");
+    sd_save_to_file(buff, imagesize + 54, "atmosphere/boot_menu/screenshot.bmp");
     free(buff);
 
     g_gfx_con.scale = 2;
     gfx_con_setpos(&g_gfx_con, 0, 665);
-    gfx_printf(&g_gfx_con, " Screenshot saved! Find it at argon/screenshot.bmp");
+    gfx_printf(&g_gfx_con, " Screenshot saved! Find it at atmosphere/boot_menu/screenshot.bmp");
     return 0;
 }
