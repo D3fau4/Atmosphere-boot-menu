@@ -26,6 +26,7 @@
 #include "utils/dirlist.h"
 #include "utils/util.h"
 #include "utils/touch.h"
+#include "utils/ini.h"
 
 #include "core/launcher.h"
 #include "core/payloads.h"
@@ -111,13 +112,13 @@ gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Options", buttonX + 
 	//check emunand Status
     if (sd_file_exists ("atmosphere/emunand/boot0"))
 {
-        gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/button.bmp"),buttonX - 80,buttonY - 500, buttonH, buttonW,tool_emu, NULL));
+        gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/button.bmp"),buttonX - 120,buttonY + 825, buttonH, buttonW,tool_emu, NULL)); //- 80, - 500
 	
 		if(emuNAND == 1)
 		{
-		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuNAND enabled", buttonX - 3, buttonY + 260, 150, 100, NULL, NULL));
+		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuNAND enabled", buttonX - 45, buttonY + 865, 150, 100, NULL, NULL)); //- 3, + 260
 		}else{
-		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuNAND disabled", buttonX - 3, buttonY + 260, 150, 100, NULL, NULL));
+		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuNAND disabled", buttonX - 45, buttonY + 865, 150, 100, NULL, NULL)); // - 45. + 865
 		}
 }
 
