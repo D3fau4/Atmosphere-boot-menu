@@ -25,6 +25,7 @@
 custom_gui_t* custom_gui_load()
 {
     custom_gui_t* custom_gui = (custom_gui_t*)malloc(sizeof(custom_gui_t));
+    custom_gui->custom_boot = (u8*)sd_file_read(CUSTOM_BOOT_PATH);
     custom_gui->custom_bg = (u8*)sd_file_read(CUSTOM_BG_PATH);
     custom_gui->title_bmp = (u8*)sd_file_read(CUSTOM_TITLE_PATH);
     return custom_gui;
@@ -32,6 +33,7 @@ custom_gui_t* custom_gui_load()
 
 void custom_gui_end(custom_gui_t* cg)
 {
+    free(cg->custom_boot);
     free(cg->custom_bg);
     free(cg->title_bmp);
     free(cg);
@@ -46,6 +48,15 @@ bool render_custom_background(custom_gui_t* cg)
     return true;
 }
 
+bool render_custom_boot(custom_gui_t* cg)
+{
+    if (cg->custom_boot == NULL)
+        return false;
+    
+    gfx_render_splash(&g_gfx_ctxt, cg->custom_boot);
+    return true;
+}
+
 bool render_custom_title(custom_gui_t* cg)
 {  
     if (cg->title_bmp == NULL)
@@ -53,7 +64,7 @@ bool render_custom_title(custom_gui_t* cg)
 
     u32 bmp_width = (cg->title_bmp[0x12] | (cg->title_bmp[0x13] << 8) | (cg->title_bmp[0x14] << 16) | (cg->title_bmp[0x15] << 24));
     u32 bmp_height = (cg->title_bmp[0x16] | (cg->title_bmp[0x17] << 8) | (cg->title_bmp[0x18] << 16) | (cg->title_bmp[0x19] << 24));
-    gfx_render_bmp_arg_bitmap(&g_gfx_ctxt, cg->title_bmp, 420, 10, bmp_width, bmp_height);
+    gfx_render_bmp_arg_bitmap(&g_gfx_ctxt, cg->title_bmp, 796, 2, bmp_width, bmp_height);
     return true;
 }
 

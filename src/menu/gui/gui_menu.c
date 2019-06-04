@@ -58,8 +58,8 @@ gui_menu_t *gui_menu_create(const char *title)
 
 void gui_menu_append_entry(gui_menu_t *menu, gui_menu_entry_t *menu_entry)
 {
-	if (menu->next_entry == MAX_ENTRIES)
-		return;
+//	if (menu->next_entry == MAX_ENTRIES)
+//		return;
 
 	menu->entries[menu->next_entry] = menu_entry;
 	menu->next_entry++;
@@ -129,7 +129,10 @@ int gui_menu_open2(gui_menu_t *menu)
      * Render and flush at first render because blocking input won't allow us 
      * flush buffers
      */
-    gui_menu_render_menu(menu);
+    if(!render_custom_boot(menu->custom_gui))
+    gfx_clear_color(&g_gfx_ctxt, 0xFF191414);
+	gui_menu_draw_entries(menu);
+    gfx_swap_buffer(&g_gfx_ctxt);
 msleep(3000);
 
 	return 0;

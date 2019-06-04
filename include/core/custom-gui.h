@@ -19,9 +19,11 @@
 #include "utils/types.h"
 
 #define CUSTOM_BG_PATH "atmosphere/boot_menu/background.bmp"
+#define CUSTOM_BOOT_PATH "atmosphere/boot_menu/boot.bmp"
 #define CUSTOM_TITLE_PATH "atmosphere/boot_menu/title.bmp"
 
 typedef struct {
+    u8* custom_boot;
     u8* custom_bg;
     u8* title_bmp;
 } custom_gui_t;
@@ -33,6 +35,8 @@ void custom_gui_end(custom_gui_t*);
 
 /* Renders custom background, returns false if background.bmp does not exist */
 bool render_custom_background(custom_gui_t*);
+
+bool render_custom_boot(custom_gui_t*);
 
 /* Renders custom title, returns false if title.bmp does not exist */
 bool render_custom_title(custom_gui_t*);

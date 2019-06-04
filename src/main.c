@@ -74,7 +74,7 @@ void ipl_main()
     /* Mount Sd card and init */
     if (sd_mount())
     {
-        gui_init_argon_menu();
+        gui_init_argon_boot();
     } else {
         gfx_printf(&g_gfx_con, "No sd card found...\n");
     }
