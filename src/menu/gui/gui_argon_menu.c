@@ -67,9 +67,9 @@ void gui_init_argon_boot(void)
     gui_menu_open2(menu);
 	
 	//waith user input
-//        bool cancel_auto_chainloading = btn_read() & BTN_VOL_UP;
-//        if (!cancel_auto_chainloading)
-//		launch_payload("atmosphere/boot_menu/bin/fusee-primary.bin");
+    bool cancel_auto_chainloading = btn_read() & BTN_VOL_UP;
+    if (!cancel_auto_chainloading)
+	launch_payload("atmosphere/boot_menu/bin/fusee-primary.bin");
 gui_menu_pool_cleanup();
 gui_init_argon_menu();
 }
