@@ -111,13 +111,13 @@ gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Options", buttonX + 
 	//check emunand Status
 	if (emuNAND != 0)
 	{
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/button.bmp"),buttonX,buttonY - 400, buttonH, buttonW,tool_emu, NULL));
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/button.bmp"),buttonX,buttonY - 500, buttonH, buttonW,tool_emu, NULL));
 	
 		if(emuNAND == 1)
 		{
-		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuNAND enabled", buttonX + 80, buttonY + 360, 150, 100, NULL, NULL));
+		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuNAND enabled", buttonX + 15, buttonY + 260, 150, 100, NULL, NULL));
 		}else{
-		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuNAND disabled", buttonX + 80, buttonY + 360, 150, 100, NULL, NULL));
+		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuNAND disabled", buttonX + 15, buttonY + 260, 150, 100, NULL, NULL));
 		}
 	}
 
