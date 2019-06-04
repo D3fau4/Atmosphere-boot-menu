@@ -69,7 +69,7 @@ void gui_init_argon_boot(void)
 	//waith user input
     bool cancel_auto_chainloading = btn_read() & BTN_VOL_UP;
     if (!cancel_auto_chainloading)
-	launch_payload("atmosphere/boot_menu/bin/fusee-primary.bin");
+	launch_payload("atmosphere/boot_menu/bin/Atmosphere.bin");
 gui_menu_pool_cleanup();
 gui_init_argon_menu();
 }
@@ -115,9 +115,9 @@ gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Options", buttonX + 
 	
 		if(emuNAND == 1)
 		{
-		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuNAND enabled", buttonX + 15, buttonY + 260, 150, 100, NULL, NULL));
+		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuNAND enabled", buttonX - 3, buttonY + 260, 150, 100, NULL, NULL));
 		}else{
-		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuNAND disabled", buttonX + 15, buttonY + 260, 150, 100, NULL, NULL));
+		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuNAND disabled", buttonX - 3, buttonY + 260, 150, 100, NULL, NULL));
 		}
 	}
 
