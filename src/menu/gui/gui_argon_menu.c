@@ -39,7 +39,7 @@
 #define MARGIN_TOP 330
 #define MARGIN_LEFT 45
 //emunand trigger
-u32 emuNAND = 0;
+u32 emuNAND = 1;
 u32 iconH = 0;
 u32 iconW = 0;
 u32 iconY = 0;
