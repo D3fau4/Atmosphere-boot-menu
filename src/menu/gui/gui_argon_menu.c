@@ -109,7 +109,7 @@ gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Options", buttonX + 
 */
 
 	//check emunand Status
-    if (file_exist ("atmosphere/emunand/boot0"))
+    if (sd_file_exists ("atmosphere/emunand/boot0"))
 {
         gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/button.bmp"),buttonX - 80,buttonY - 500, buttonH, buttonW,tool_emu, NULL));
 	
