@@ -111,7 +111,7 @@ gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Options", buttonX + 
 	//check emunand Status
 	if (emuNAND != 0)
 	{
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/button.bmp"),buttonX - 100,buttonY - 500, buttonH, buttonW,tool_emu, NULL));
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/button.bmp"),buttonX - 50,buttonY - 500, buttonH, buttonW,tool_emu, NULL));
 	
 		if(emuNAND == 1)
 		{
