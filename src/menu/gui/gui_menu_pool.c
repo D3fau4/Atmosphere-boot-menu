@@ -20,7 +20,7 @@
 void gui_menu_pool_init()
 {
     g_menu_pool = (gui_menu_pool_t *)malloc(sizeof(gui_menu_pool_t));
-    g_menu_pool->max_items = 0x16;
+    g_menu_pool->max_items = 0x20;
     g_menu_pool->current_items = 0;
     g_menu_pool->menus = (gui_menu_t **)malloc(sizeof(gui_menu_t *) * g_menu_pool->max_items);
 }

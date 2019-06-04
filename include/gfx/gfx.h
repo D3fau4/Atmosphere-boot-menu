@@ -22,18 +22,13 @@
 
 #include "utils/types.h"
 
-#define RED 0xFFFF0000
+#define RED 0xFF0000FF
 #define GREEN 0xFF00FF00
-#define BLUE 0xFF0000FF
+#define BLUE 0xFFFF0000
 #define YELLOW 0xFF00FFFF
 #define ORANGE 0xFF3891FF
 #define WHITE 0xFFFFFFFF
 #define BLACK 0xFF000000
-#define colour_red 0xFFFF0000
-#define colour_lightblue 0xFFB3F0FF
-#define colour_altlightblue 0xFF00D0FF
-#define colour_purple 0xFF8300FF
-#define MYBLUE 0xFF3065E1
 
 #define CHAR_WIDTH 8
 #define CHAR_HEIGHT 8

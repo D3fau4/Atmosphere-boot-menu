@@ -16,12 +16,12 @@
  */
 #ifndef _MENU_H_
 #define _MENU_H_
-
+#include "soc/hw_init.h"
 #include "utils/types.h"
 #include "menu/gui/gui_menu_entry.h"
 #include "core/custom-gui.h"
 
-#define MAX_ENTRIES 0x40
+#define MAX_ENTRIES 0x20
 
 typedef struct
 {

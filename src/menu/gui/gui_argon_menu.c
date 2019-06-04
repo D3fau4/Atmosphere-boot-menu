@@ -145,7 +145,6 @@ static int tool_emu(void* param)
 	}else{
 	emuNAND = 1;
 	}
-	gui_menu_pool_cleanup();
 	gui_init_argon_menu();
 return 0;
 }
