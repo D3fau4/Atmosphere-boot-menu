@@ -107,7 +107,7 @@ if (sd_file_exists(inifile))
 {
 char str_emummc_enabled[100];
 long _emummc_enabled;
-_emummc_enabled = ini_gets("emummc", "emummc_enabled", "dummy", str_emummc_enabled, sizearray(str_emummc_enabled), inifile);
+_emummc_enabled = ini_gets("emummc", "emummc_enabled", "dummy", str_emummc_enabled, str_emummc_enabled, inifile);
     gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/button.bmp"),139,620, buttonH, buttonW,NULL, NULL)); //630
     if(strcmp(str_emummc_enabled, "1") == 0) 
         {
