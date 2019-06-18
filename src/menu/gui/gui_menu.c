@@ -124,7 +124,7 @@ int gui_menu_open(gui_menu_t *menu)
 
 int gui_menu_open2(gui_menu_t *menu)
 {   
-    gfx_con_setcol(&g_gfx_con, 0xFF1C2149, 0, 0xFF191414);
+    gfx_con_setcol(&g_gfx_con, 0xFFF7F7F7, 0, 0xFF191414);
     /* 
      * Render and flush at first render because blocking input won't allow us 
      * flush buffers
@@ -134,6 +134,21 @@ int gui_menu_open2(gui_menu_t *menu)
 	gui_menu_draw_entries(menu);
     gfx_swap_buffer(&g_gfx_ctxt);
 msleep(3000);
+
+	return 0;
+}
+
+int gui_menu_open3(gui_menu_t *menu3)
+{   
+    gfx_con_setcol(&g_gfx_con, 0xFFF7F7F7, 0, 0xFF191414);
+    /* 
+     * Render and flush at first render because blocking input won't allow us 
+     * flush buffers
+     */
+    gui_menu_render_menu(menu3);
+
+	while (gui_menu_update(menu3))
+    ;
 
 	return 0;
 }
