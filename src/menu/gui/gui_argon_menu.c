@@ -26,7 +26,7 @@
 #include "utils/dirlist.h"
 #include "utils/util.h"
 #include "utils/touch.h"
-#include "utils/ini.h"
+#include "utils/minIni.h"
 
 #include "core/launcher.h"
 #include "core/payloads.h"
