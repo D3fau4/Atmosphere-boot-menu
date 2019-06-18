@@ -138,20 +138,6 @@ msleep(3000);
 	return 0;
 }
 
-int gui_menu_open3(gui_menu_t *menu3)
-{   
-    gfx_con_setcol(&g_gfx_con, 0xFFF7F7F7, 0, 0xFF191414);
-    /* 
-     * Render and flush at first render because blocking input won't allow us 
-     * flush buffers
-     */
-    gui_menu_render_menu(menu3);
-
-	while (gui_menu_update(menu3))
-    ;
-
-	return 0;
-}
 
 void gui_menu_destroy(gui_menu_t *menu)
 {
