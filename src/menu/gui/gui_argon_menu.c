@@ -52,6 +52,11 @@ u32 buttonW = 0;
 u32 buttonY = 0;
 u32 buttonX = 0;
 
+//menus
+u32 menu = 0;
+u32 submenu = 0;
+
+//funtions
 static int tool_reboot_rcm(void* param);
 static int tool_power_off(void* param);
 static int tool_emu(void* param);
@@ -83,6 +88,9 @@ void gui_init_argon_menu(void)
     gui_menu_pool_init();
 
     gui_menu_t* menu = gui_menu_create("ArgonNX");
+	//main menu
+	if(menu == 0)
+	{
 //control panel
 iconH = 300;
 iconW = 300;
@@ -165,6 +173,49 @@ if (sd_file_exists("emummc/emummc.ini") || sd_file_exists("emummc/emummc.ini.bak
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/power.bmp"),900, 645,71, 12, tool_power_off, NULL));//655
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/reboot.bmp"),1100, 645, 82, 13, tool_reboot_rcm, NULL));//655
     /*gui_menu_append_entry(menu,gui_create_menu_entry(("atmosphere/boot_menu/gfx/reboot.bmp", 1100, 680, 150, 100, tool_reboot_rcm, NULL));*/
+
+//end of main menu
+}else{
+//second menu and sub menus
+
+//unchanched icons
+u32 permsubY = ;
+u32 permsubX = 
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/button.bmp"),buttonX - 80,buttonY - 500, buttonH, buttonW,tool_emu, NULL));
+
+if(submenu == 0)
+{
+}
+
+if(submenu == 1)
+{
+}
+
+if(submenu == 2)
+{
+}
+
+if(submenu == 3)
+{
+}
+
+if(submenu == 4)
+{
+}
+
+if(submenu == 5)
+{
+}
+
+if(submenu == 6)
+{
+}
+
+}
+
+//permanent icons for all
+
+
 
     /* Start menu */
     gui_menu_open(menu);
