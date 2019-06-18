@@ -88,14 +88,16 @@ iconW = 300;
 iconY = 210;
 iconX = 145;
 
-buttonH = 300;
-buttonW = 100;
+buttonH = 289;
+buttonW = 65;
 buttonY = iconY + 300;
 buttonX = iconX;
 //create menu entries
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/boot-CFW.bmp"),iconX, iconY, iconW, iconH, (int (*)(void *))launch_payload, (void*)"atmosphere/boot_menu/bin/Atmosphere.bin"));
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/boot-Stock.bmp"),iconX + 350, iconY, iconW, iconH, (int (*)(void *))launch_payload, (void*)"atmosphere/boot_menu/bin/stock.bin"));
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/gear.bmp"),iconX + 700, iconY, iconW, iconH, NULL, NULL));
+//gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/gear.bmp"),iconX + 700, iconY, iconW, iconH, NULL, NULL));
+
+
 /*
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/button.bmp"),buttonX,buttonY, buttonH, buttonW, (int (*)(void *))launch_payload, (void*)"atmosphere/boot_menu/bin/Atmosphere.bin"));
 
@@ -110,16 +112,33 @@ gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Options", buttonX + 
 */
 
 	//check emunand Status
+    /*
     if (sd_file_exists ("emummc/emummc.ini"))
 {
         gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/button.bmp"),buttonX - 120,buttonY + 825, buttonH, buttonW,tool_emu, NULL)); //- 80, - 500
-	
-		if(emuNAND == 1)
-		{
-		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuNAND enabled", buttonX - 45, buttonY + 865, 150, 100, NULL, NULL)); //- 3, + 260
-		}else{
-		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuNAND disabled", buttonX - 45, buttonY + 865, 150, 100, NULL, NULL)); // - 45. + 865
-		}
+        gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuMMC enabled", buttonX - 45, buttonY + 865, 150, 100, NULL, NULL));
+		if (sd_file_exists("emummc/emummc.ini"))
+        {
+        gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuMMC enabled", buttonX - 45, buttonY + 865, 150, 100, NULL, NULL));
+        }
+
+        if (sd_file_exists("emummc/emummc.ini.bak"))
+        {
+        gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuMMC disabled", buttonX - 45, buttonY + 865, 150, 100, NULL, NULL)); // - 45. + 865
+        }
+}*/
+
+if (sd_file_exists("emummc/emummc.ini") || sd_file_exists("emummc/emummc.ini.bak"))
+{
+    gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/button.bmp"),139,620, buttonH, buttonW,NULL, NULL)); //- 80, - 500
+    if (sd_file_exists("emummc/emummc.ini"))
+        {
+        gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuMMC enabled", 205, 645, 150, 100, tool_emu, NULL));
+        }
+        if (sd_file_exists("emummc/emummc.ini.bak"))
+        {
+        gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuMMC disabled", 205, 645, 150, 100, tool_emu, NULL));
+        }
 }
 
 /*
@@ -139,12 +158,11 @@ gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Options", buttonX + 
      gui_menu_append_entry(menu, 
             gui_create_menu_entry_no_bitmap("Screenshot", 700, 680, 150, 100, (int (*)(void *))screenshot, NULL));
 
-    /* Generate reboot rcm and shutdown entry */
-    gui_menu_append_entry(menu, 
-            gui_create_menu_entry_no_bitmap("Power off", 900, 680, 150, 100, tool_power_off, NULL));
-
-    gui_menu_append_entry(menu, 
-            gui_create_menu_entry_no_bitmap("Reboot RCM", 1100, 680, 150, 100, tool_reboot_rcm, NULL));
+    /* Generate reboot rcm and shutdown entry */ 
+           /* gui_create_menu_entry_no_bitmap("Power off", 900, 680, 150, 100, tool_power_off, NULL));*/71, 12,
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/power.bmp"),900, 645,71, 12, tool_power_off, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/reboot.bmp"),1100, 645, 82, 13, tool_reboot_rcm, NULL));
+    /*gui_menu_append_entry(menu,gui_create_menu_entry(("atmosphere/boot_menu/gfx/reboot.bmp", 1100, 680, 150, 100, tool_reboot_rcm, NULL));*/
 
     /* Start menu */
     gui_menu_open(menu);
@@ -153,17 +171,6 @@ gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Options", buttonX + 
     gui_menu_pool_cleanup();
 }
 
-static int tool_emu(void* param)
-{
-	if(emuNAND == 1)
-	{
-	emuNAND = 2;
-	}else{
-	emuNAND = 1;
-	}
-	gui_init_argon_menu();
-return 0;
-}
 
 static int tool_reboot_rcm(void* param)
 {
@@ -177,4 +184,21 @@ static int tool_power_off(void* param)
     gui_menu_pool_cleanup();
     power_off();
     return 0;
+}
+static int tool_emu(void* param)
+{
+sd_mount();
+        if (!g_sd_mounted)
+        {return 0;}
+if (sd_file_exists ("emummc/emummc.ini"))
+{f_unlink("emummc/emummc.ini.bak");}
+
+if (sd_file_exists ("emummc/emummc.ini"))
+{
+f_rename("emummc/emummc.ini","emummc/emummc.ini.bak");
+}else{
+f_rename("emummc/emummc.ini.bak","emummc/emummc.ini");
+}
+    gui_init_argon_menu();
+return 0;
 }
