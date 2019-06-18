@@ -116,12 +116,12 @@ gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Options", buttonX + 
 	
 		if (sd_file_exists("emummc/emummc.ini"))
         {
-        gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Enabled", buttonX + 25, buttonY + 30, 150, 100, NULL, NULL)); //- 3, + 260
+        gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuMMC enabled", buttonX - 45, buttonY + 865, 150, 100, NULL, NULL));
         }
 
         if (sd_file_exists("emummc/emummc.ini.bak"))
         {
-        gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Disabled", buttonX +25, buttonY + 30, 150, 100, NULL, NULL)); //- 3, + 260
+        gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuMMC disabled", buttonX - 45, buttonY + 865, 150, 100, NULL, NULL)); // - 45. + 865
         }
 }
 
