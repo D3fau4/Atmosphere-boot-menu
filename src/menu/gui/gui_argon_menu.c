@@ -34,11 +34,12 @@
 
 #include "mem/heap.h"
 
-#define COLUMNS 3  
+#define COLUMNS 2  
 #define ROWS 1
 #define ELEM_SIZE 230
 #define MARGIN_TOP 330
 #define MARGIN_LEFT 45
+//antes 45
 //emunand trigger
 u32 emuNAND = 1;
 u32 iconH = 0;
@@ -86,7 +87,8 @@ void gui_init_argon_menu(void)
 iconH = 300;
 iconW = 300;
 iconY = 210;
-iconX = 145;
+//antes 145
+iconX = 316;
 
 buttonH = 289;
 buttonW = 65;
