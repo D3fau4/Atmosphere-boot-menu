@@ -56,6 +56,9 @@ static int tool_reboot_rcm(void* param);
 static int tool_power_off(void* param);
 static int tool_emu(void* param);
 
+const char inifile[] = "/emummc/emummc.ini";
+#define FILE_NAME "/emummc/emummc.ini"
+#define sizearray(a)  (sizeof(a) / sizeof((a)[0]))
 
 /* Init needed menus for ArgonNX */
 void gui_init_argon_boot(void)
@@ -99,14 +102,18 @@ gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boo
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/boot-Stock.bmp"),iconX + 350, iconY, iconW, iconH, (int (*)(void *))launch_payload, (void*)"atmosphere/boot_menu/bin/stock.bin"));
 //gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/gear.bmp"),iconX + 700, iconY, iconW, iconH, NULL, NULL));
 
-if (sd_file_exists("emummc/emummc.ini") || sd_file_exists("emummc/emummc.ini.bak"))
+//emunand
+if (sd_file_exists(inifile))
 {
+char str_emummc_enabled[100];
+long _emummc_enabled;
+_emummc_enabled = ini_gets("emummc", "emummc_enabled", "dummy", str_emummc_enabled, sizearray(str_emummc_enabled), inifile);
     gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/button.bmp"),139,620, buttonH, buttonW,NULL, NULL)); //630
-    if (sd_file_exists("emummc/emummc.ini"))
+    if(strcmp(str_emummc_enabled, "1") == 0) 
         {
         gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuMMC enabled", 205, 645, 150, 100, tool_emu, NULL));
         }
-        if (sd_file_exists("emummc/emummc.ini.bak"))
+       else if(strcmp(str_emummc_enabled, "0") == 0) 
         {
         gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuMMC disabled", 205, 645, 150, 100, tool_emu, NULL));
         }
