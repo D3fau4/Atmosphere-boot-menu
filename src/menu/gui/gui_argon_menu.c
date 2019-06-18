@@ -81,6 +81,7 @@ void gui_init_argon_menu(void)
     gui_menu_pool_init();
 
     gui_menu_t* menu = gui_menu_create("ArgonNX");
+    gui_menu_t* menu3 = gui_menu_create("ArgonNX3");
 //control panel
 iconH = 300;
 iconW = 300;
