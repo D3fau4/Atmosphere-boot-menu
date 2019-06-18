@@ -161,7 +161,7 @@ if (sd_file_exists("emummc/emummc.ini") || sd_file_exists("emummc/emummc.ini.bak
             gui_create_menu_entry_no_bitmap("Screenshot", 700, 680, 150, 100, (int (*)(void *))screenshot, NULL));
 
     /* Generate reboot rcm and shutdown entry */ 
-           /* gui_create_menu_entry_no_bitmap("Power off", 900, 680, 150, 100, tool_power_off, NULL));*/71, 12,
+           /* gui_create_menu_entry_no_bitmap("Power off", 900, 680, 150, 100, tool_power_off, NULL));71, 12,*/
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/power.bmp"),900, 645,71, 12, tool_power_off, NULL));//655
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/reboot.bmp"),1100, 645, 82, 13, tool_reboot_rcm, NULL));//655
     /*gui_menu_append_entry(menu,gui_create_menu_entry(("atmosphere/boot_menu/gfx/reboot.bmp", 1100, 680, 150, 100, tool_reboot_rcm, NULL));*/
