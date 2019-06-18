@@ -137,6 +137,7 @@ if (sd_file_exists("emummc/emummc.ini") || sd_file_exists("emummc/emummc.ini.bak
         {
         gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuMMC disabled", buttonX - 45, buttonY + 865, 150, 100, tool_emu, NULL)); // - 45. + 865
         }
+}
 
 /*
 	if (emuNAND != 0)
