@@ -227,14 +227,14 @@ gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Payloads", permsubX+
 
 
 permsubY = permsubY+150;
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/back.bmp"),permsubX,permsubY, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)5));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/back.bmp"),permsubX,625, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)5));
 //gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Back", permsubX+20, permsubY+30, 150, 100, NULL, NULL));
 
 //remove
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/screenshot.bmp"), 500, 610, sub_buttonW, sub_buttonH,(int (*)(void *))screenshot, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/screenshot.bmp"), 500, 625, sub_buttonW, sub_buttonH,(int (*)(void *))screenshot, NULL));
 //remove
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/bar.bmp"),0, 100, 1280, 2, NULL, NULL));
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/bar.bmp"),0, 650, 1280, 2, NULL, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/bar.bmp"),0, 610, 1280, 2, NULL, NULL));
 display_backlight_brightness(100, 1000);
 
 if(submenu == 0)
