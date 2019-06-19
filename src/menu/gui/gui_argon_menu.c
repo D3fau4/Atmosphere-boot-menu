@@ -267,6 +267,7 @@ gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Please select the pa
 char* payloads = dirlist("", "*.bin", false);
     u32 i = 0;
 	u32 y = 180;
+	u32 x = 500;
     while(payloads[i * 256])
     {
 		if(strlen(&payloads[i * 256]) <= 100){			
@@ -278,8 +279,9 @@ char* payloads = dirlist("", "*.bin", false);
                                     500, y,
                                     200, 75,
                                     (int (*)(void *))launch_payload, (void*)&payloads[i * 256]));
-*/									
-			gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(&payloads[i * 256],600, y+30, 150, 100, (int (*)(void *))launch_payload, (void*)&payloads[i * 256]));
+*/		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/files.bmp"),x, y+30, 500, 25,(int (*)(void *))launch_payload, (void*)&payloads[i * 256]));
+		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(&payloads[i * 256], x+strlen(&payloads[i * 256])*8-40, y+35, 150, 100, NULL, NULL));						
+//			gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(&payloads[i * 256],600, y+30, 150, 100, (int (*)(void *))launch_payload, (void*)&payloads[i * 256]));
 
 			}
 	y = y + 70;
@@ -311,50 +313,56 @@ char* folder = listfol(directory, "*", true);
     u32 w = 0;
     u32 i = 0;
 	u32 y = 90;
+	u32 x = 10;
 	u32 space = 50;
 //	gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(directory,600, y-20, 150, 100, (int (*)(void *))tool_Menus, (void*)33));
 			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read(""),1, 20, 300, 75,(int (*)(void *))tool_Menus, (void*)33));
-		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(directory, 100+20, 20+30, 150, 100, NULL, NULL));
+		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(directory, strlen(directory)*8-40, 5, 150, 100, NULL, NULL));
 	
     while(folder[r * 256])
     {
-			if(strlen(&folder[r * 256]) <= 100){			
-//			gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(&folder[r * 256],600, y+30, 150, 100, (int (*)(void *))tool_dir, &folder[r * 256]));
-			
-			
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/folder.bmp"),10, y+30, 500, 25,(int (*)(void *))tool_dir, (void*)&folder[r * 256]));
-		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(&folder[r * 256], strlen(&folder[r * 256])*8-40, y+35, 150, 100, NULL, NULL));
-	y = y + space;
+		if(strlen(&folder[r * 256]) <= 100){			
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/folder.bmp"),x, y+30, 500, 25,(int (*)(void *))tool_dir, (void*)&folder[r * 256]));
+		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(&folder[r * 256], x+strlen(&folder[r * 256])*8-40, y+35, 150, 100, NULL, NULL));
 
+		y = y + space;
+		
+		i++;
+			if(i == 12){
+			y = 90;
+			x = 700;
+			i = 0;
 			}
-	i++;
+		}
 	r++;
 	}
 
-   y = 90;
     while(files[w * 256])
     {
-			if(strlen(&files[w * 256]) <= 100){
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/files.bmp"),600+10, y+30, 500, 25,(int (*)(void *))tool_dir, (void*)&files[w * 256]));
-		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(&files[w * 256], 570+strlen(&files[w * 256])*8, y+35, 150, 100, NULL, NULL));
-			
-//			gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(&files[w * 256],800, y+30, 150, 100, NULL, NULL));
-	y = y + space;
-			
-			}
-	i++;
+		if(strlen(&files[w * 256]) <= 100){
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/files.bmp"),x, y+30, 500, 25,NULL, NULL));
+		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(&files[w * 256], x+strlen(&files[w * 256])*8-40, y+35, 150, 100, NULL, NULL));
+		y = y + space;
+
+	i++;			
+			if(i == 12){
+			y = 90;
+			x = 600;
+			i = 0;
+			}	
+
+		}
 	w++;
 	}
-space = 50;
 
- 
+
  }
 
 
 }
 
 //permanent icons for all
-
+display_backlight_brightness(100, 1000);
     /* Start menu */
     gui_menu_open(menu);
 
@@ -379,6 +387,7 @@ static int tool_power_off(void* param)
 
 int tool_Menus(u32 param)
 {
+
 if(param == 77){
 filemgr = 0;
 gui_init_argon_menu();
