@@ -240,7 +240,7 @@ display_backlight_brightness(100, 1000);
 if(submenu == 0)
 {
 
-gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("welcome to the option menu",500, 300, 150, 100, NULL, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("welcome to the option menu",700, 300, 150, 100, NULL, NULL));
 
 }
 
@@ -310,8 +310,8 @@ char* folder = listfol(directory, "*", true);
     u32 r = 0;
     u32 w = 0;
     u32 i = 0;
-	u32 y = 130;
-	u32 space = 70;
+	u32 y = 90;
+	u32 space = 50;
 //	gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(directory,600, y-20, 150, 100, (int (*)(void *))tool_Menus, (void*)33));
 			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read(""),1, 20, 300, 75,(int (*)(void *))tool_Menus, (void*)33));
 		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(directory, 100+20, 20+30, 150, 100, NULL, NULL));
@@ -322,8 +322,8 @@ char* folder = listfol(directory, "*", true);
 //			gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(&folder[r * 256],600, y+30, 150, 100, (int (*)(void *))tool_dir, &folder[r * 256]));
 			
 			
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/gray_button.bmp"),100, y+30, 200, 75,(int (*)(void *))tool_dir, (void*)&folder[r * 256]));
-		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(&folder[r * 256], 100+20, y+30+30, 150, 100, NULL, NULL));
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/folder.bmp"),10, y+30, 500, 25,(int (*)(void *))tool_dir, (void*)&folder[r * 256]));
+		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(&folder[r * 256], 120+20, y+35, 150, 100, NULL, NULL));
 	y = y + space;
 
 			}
@@ -331,7 +331,7 @@ char* folder = listfol(directory, "*", true);
 	r++;
 	}
 
-   y = 130;
+   y = 90;
     while(files[w * 256])
     {
 			if(strlen(&files[w * 256]) <= 100){			
