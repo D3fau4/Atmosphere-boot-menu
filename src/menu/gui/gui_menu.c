@@ -109,7 +109,8 @@ static int gui_menu_update(gui_menu_t *menu)
 
 int gui_menu_open(gui_menu_t *menu)
 {   
-    gfx_con_setcol(&g_gfx_con, 0xFF1C2149, 0, 0xFF191414);//blank
+//		gfx_con_setcol(&g_gfx_con, 0xFF1C2149, 0, 0xFF191414);//blank
+		gfx_con_setcol(&g_gfx_con, 0xFFF9F9F9, 0, 0xFF191414);
     /* 
      * Render and flush at first render because blocking input won't allow us 
      * flush buffers
