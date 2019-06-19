@@ -199,8 +199,8 @@ gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boo
 /* gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/poweroff.bmp"),5,20, 75, 75, NULL, NULL));
 gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Poweroff", permsubX+20, 50, 150, 100, NULL, NULL));*/
 
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/gray_button.bmp"),1000, 20, 200, 75,(int (*)(void *))tool_Menus, (void*)66));
-gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("File MGR", 1000+20, 20+30, 150, 100, NULL, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/filem.bmp"),1000, 20, 200, 75,(int (*)(void *))tool_Menus, (void*)66));
+//gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("File MGR", 1000+20, 20+30, 150, 100, NULL, NULL));
 
 permsubY = permsubY+80;
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/RCM.bmp"),permsubX,permsubY, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)1));
