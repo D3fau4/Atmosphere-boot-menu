@@ -55,6 +55,7 @@ u32 buttonX = 0;
 //menus
 u64 main_menu = 1;
 u32 submenu = 0;
+u32 filemgr = 0;
 
 //sub menus
 u32 permsubY = 0;
@@ -187,7 +188,8 @@ gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boo
 //end of main menu
 }else{
 //second menu and sub menus
-
+	if(filemgr == 0)
+	{
 //unchanched icons
 permsubY = 110;
 permsubX = 80;
@@ -196,6 +198,9 @@ sub_buttonH = 65;
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/poweroff.bmp"),permsubX,20, sub_buttonW, sub_buttonH,tool_power_off, NULL));
 /* gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/poweroff.bmp"),5,20, 75, 75, NULL, NULL));
 gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Poweroff", permsubX+20, 50, 150, 100, NULL, NULL));*/
+
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/gray_button.bmp"),1000, 20, 200, 75,(int (*)(void *))tool_Menus, (void*)66));
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("File MGR", 1000+20, 20+30, 150, 100, NULL, NULL));
 
 permsubY = permsubY+80;
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/RCM.bmp"),permsubX,permsubY, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)1));
@@ -253,46 +258,7 @@ gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Nand",500, permsubY+
 
 if(submenu == 3)
 {
-//gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuMMC",500, permsubY+30, 150, 100, NULL, NULL));
-char* files = listfil(directory, "*", true);
-char* folder = listfol(directory, "*", true);
-		
-    u32 r = 0;
-    u32 w = 0;
-    u32 i = 0;
-	u32 y = 130;
-	u32 space = 70;
-//	gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(directory,600, y-20, 150, 100, (int (*)(void *))tool_Menus, (void*)33));
-			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/gray_button.bmp"),300, y-50, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)33));
-		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(directory, 300+20, y-50+30, 150, 100, NULL, NULL));
-	
-    while(folder[r * 256])
-    {
-			if(strlen(&folder[r * 256]) <= 100){			
-//			gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(&folder[r * 256],600, y+30, 150, 100, (int (*)(void *))tool_dir, &folder[r * 256]));
-			
-			
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/gray_button.bmp"),300, y+30, sub_buttonW, sub_buttonH,(int (*)(void *))tool_dir, (void*)&folder[r * 256]));
-		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(&folder[r * 256], 300+20, y+30+30, 150, 100, NULL, NULL));
-	y = y + space;
-
-			}
-	i++;
-	r++;
-	}
-
-   y = 130;
-    while(files[w * 256])
-    {
-			if(strlen(&files[w * 256]) <= 100){			
-			gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(&files[w * 256],900, y+30, 150, 100, NULL, NULL));
-	y = y + space - 30;
-			
-			}
-	i++;
-	w++;
-	}
-space = 50;
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuMMC",500, permsubY+30, 150, 100, NULL, NULL));
 }
 
 if(submenu == 4)
@@ -333,7 +299,53 @@ submenu = 0;
 gui_init_argon_menu();
 
 }
+ }else{
+ //file manager
+ gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/power.bmp"),900, 645,71, 12, tool_power_off, NULL));//655
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/gray_button.bmp"),1000, 20, 200, 75,(int (*)(void *))tool_Menus, (void*)77));
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Exit", 1000+20, 20+30, 150, 100, NULL, NULL));
+char* files = listfil(directory, "*", true);
+char* folder = listfol(directory, "*", true);
+		
+    u32 r = 0;
+    u32 w = 0;
+    u32 i = 0;
+	u32 y = 130;
+	u32 space = 70;
+//	gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(directory,600, y-20, 150, 100, (int (*)(void *))tool_Menus, (void*)33));
+			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read(""),1, 20, 300, 75,(int (*)(void *))tool_Menus, (void*)33));
+		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(directory, 100+20, 20+30, 150, 100, NULL, NULL));
+	
+    while(folder[r * 256])
+    {
+			if(strlen(&folder[r * 256]) <= 100){			
+//			gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(&folder[r * 256],600, y+30, 150, 100, (int (*)(void *))tool_dir, &folder[r * 256]));
+			
+			
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/gray_button.bmp"),100, y+30, 200, 75,(int (*)(void *))tool_dir, (void*)&folder[r * 256]));
+		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(&folder[r * 256], 100+20, y+30+30, 150, 100, NULL, NULL));
+	y = y + space;
 
+			}
+	i++;
+	r++;
+	}
+
+   y = 130;
+    while(files[w * 256])
+    {
+			if(strlen(&files[w * 256]) <= 100){			
+			gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(&files[w * 256],800, y+30, 150, 100, NULL, NULL));
+	y = y + space - 30;
+			
+			}
+	i++;
+	w++;
+	}
+space = 50;
+
+ 
+ }
 
 
 }
@@ -364,6 +376,17 @@ static int tool_power_off(void* param)
 
 int tool_Menus(u32 param)
 {
+if(param == 77){
+filemgr = 0;
+gui_init_argon_menu();
+}
+
+if(param == 66){
+filemgr = 1;
+gui_init_argon_menu();
+}
+
+
 if(param == 33){
 directory = "";
 gui_init_argon_menu();
