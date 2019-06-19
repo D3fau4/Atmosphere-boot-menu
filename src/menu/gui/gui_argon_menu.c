@@ -53,8 +53,14 @@ u32 buttonY = 0;
 u32 buttonX = 0;
 
 //menus
-u32 menu = 0;
+u32 main_menu = 0;
 u32 submenu = 0;
+
+//sub menus
+u32 permsubY = 0;
+u32 permsubX = 0;
+u32 sub_buttonW = 0;
+u32 sub_buttonH = 0;
 
 //funtions
 static int tool_reboot_rcm(void* param);
@@ -72,11 +78,12 @@ void gui_init_argon_boot(void)
 	
 	//show display without icons
     gui_menu_open2(menu);
-	
+/*	
 	//waith user input
     bool cancel_auto_chainloading = btn_read() & BTN_VOL_UP;
     if (!cancel_auto_chainloading)
 	launch_payload("atmosphere/boot_menu/bin/Atmosphere.bin");
+*/
 gui_menu_pool_cleanup();
 gui_init_argon_menu();
 }
@@ -89,7 +96,7 @@ void gui_init_argon_menu(void)
 
     gui_menu_t* menu = gui_menu_create("ArgonNX");
 	//main menu
-	if(menu == 0)
+	if(main_menu == 0)
 	{
 //control panel
 iconH = 300;
@@ -140,14 +147,13 @@ gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Options", buttonX + 
 
 if (sd_file_exists("emummc/emummc.ini") || sd_file_exists("emummc/emummc.ini.bak"))
 {
-    gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/button.bmp"),139,620, buttonH, buttonW,NULL, NULL)); //630
     if (sd_file_exists("emummc/emummc.ini"))
         {
-        gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuMMC enabled", 205, 645, 150, 100, tool_emu, NULL));
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/button.bmp"),139,620, buttonH, buttonW,tool_emu, NULL)); //630
         }
         if (sd_file_exists("emummc/emummc.ini.bak"))
         {
-        gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuMMC disabled", 205, 645, 150, 100, tool_emu, NULL));
+        gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/buttoff.bmp"),139,620, buttonH, buttonW,tool_emu, NULL)); //630
         }
 }
 
@@ -179,9 +185,31 @@ gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boo
 //second menu and sub menus
 
 //unchanched icons
-u32 permsubY = ;
-u32 permsubX = 
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/button.bmp"),buttonX - 80,buttonY - 500, buttonH, buttonW,tool_emu, NULL));
+permsubY = 150;
+permsubX = 10;
+sub_buttonW = 200;
+sub_buttonH = 75;
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/gray_button.bmp"),permsubX,10, sub_buttonW, sub_buttonH,NULL, NULL));
+
+permsubY = permsubY+100;
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/gray_button.bmp"),permsubX,permsubY, sub_buttonW, sub_buttonH,NULL, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("sample", permsubX+20, permsubY+30, 150, 100, tool_emu, NULL));
+
+
+permsubY = permsubY+100;
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/gray_button.bmp"),permsubX,permsubY, sub_buttonW, sub_buttonH,NULL, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("sample", permsubX+20, permsubY+30, 150, 100, NULL, NULL));
+
+
+permsubY = permsubY+100;
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/gray_button.bmp"),permsubX,permsubY, sub_buttonW, sub_buttonH,NULL, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("sample", permsubX+20, permsubY+30, 150, 100, NULL, NULL));
+
+
+permsubY = permsubY+100;
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/gray_button.bmp"),permsubX,permsubY, sub_buttonW, sub_buttonH,NULL, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("sample", permsubX+20, permsubY+30, 150, 100, NULL, NULL));
+
 
 if(submenu == 0)
 {
@@ -214,8 +242,8 @@ if(submenu == 6)
 }
 
 //permanent icons for all
-
-
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/power.bmp"),900, 645,71, 12, tool_power_off, NULL));//655
+gui_menu_append_entry(menu, gui_create_menu_entry_no_bitmap("Screenshot", 500, 680, 150, 100, (int (*)(void *))screenshot, NULL));
 
     /* Start menu */
     gui_menu_open(menu);
