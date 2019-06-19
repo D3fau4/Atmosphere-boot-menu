@@ -246,19 +246,24 @@ gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("welcome to the optio
 
 if(submenu == 1)
 {
-gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("AutoRCM",500, permsubY+30, 150, 100, NULL, NULL));
-
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("AutoRCM",500, 120, 150, 100, NULL, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/autorcm1.bmp"),500,355, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)5));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/autorcm2.bmp"),900,355, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)5));
 }
 
 if(submenu == 2)
 {
-gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Nand",500, permsubY+30, 150, 100, NULL, NULL));
-
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Nand",500, 120, 150, 100, NULL, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/backup1.bmp"),500,355, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)5));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/backup2.bmp"),900,355, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)5));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/backup3.bmp"),700,455, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)5));
 }
 
 if(submenu == 3)
 {
-gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuMMC",500, permsubY+30, 150, 100, NULL, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuMMC",500, 120, 150, 100, NULL, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/emummc1.bmp"),500,355, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)5));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/blank.bmp"),900,355, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)5));
 }
 
 if(submenu == 4)
@@ -271,15 +276,7 @@ char* payloads = dirlist("", "*.bin", false);
     while(payloads[i * 256])
     {
 		if(strlen(&payloads[i * 256]) <= 100){			
-/*		
-		const char* payload_wo_bin = str_replace(&payloads[i * 256], ".bin", "");
-			gui_menu_append_entry(menu, 
-					gui_create_menu_entry(payload_wo_bin,
-                                    sd_file_read("atmosphere/boot_menu/gfx/gray_button.bmp"), 
-                                    500, y,
-                                    200, 75,
-                                    (int (*)(void *))launch_payload, (void*)&payloads[i * 256]));
-*/		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/files.bmp"),x, y+30, 500, 25,(int (*)(void *))launch_payload, (void*)&payloads[i * 256]));
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/files.bmp"),x, y+30, 500, 25,(int (*)(void *))launch_payload, (void*)&payloads[i * 256]));
 		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(&payloads[i * 256], x+strlen(&payloads[i * 256])*8-40, y+35, 150, 100, NULL, NULL));						
 //			gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(&payloads[i * 256],600, y+30, 150, 100, (int (*)(void *))launch_payload, (void*)&payloads[i * 256]));
 
