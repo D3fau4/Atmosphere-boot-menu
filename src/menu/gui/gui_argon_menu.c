@@ -186,7 +186,7 @@ gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boo
 
 //unchanched icons
 permsubY = 110;
-permsubX = 80;
+permsubX = 40;
 sub_buttonW = 289;
 sub_buttonH = 65;
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/poweroff.bmp"),permsubX,20, sub_buttonW, sub_buttonH,tool_power_off, NULL));
