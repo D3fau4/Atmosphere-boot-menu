@@ -53,7 +53,7 @@ u32 buttonY = 0;
 u32 buttonX = 0;
 
 //menus
-u64 main_menu = 0;
+u64 main_menu = 1;
 u32 submenu = 0;
 
 //sub menus
@@ -62,10 +62,14 @@ u32 permsubX = 0;
 u32 sub_buttonW = 0;
 u32 sub_buttonH = 0;
 
+//dinamic directory
+char *directory = "";
+
 //funtions
 static int tool_reboot_rcm(void* param);
 static int tool_power_off(void* param);
 static int tool_emu(void* param);
+int tool_dir(char *param);
 int tool_Menus(u32 param);
 
 /* Init needed menus for ArgonNX */
@@ -186,7 +190,7 @@ gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boo
 
 //unchanched icons
 permsubY = 110;
-permsubX = 40;
+permsubX = 80;
 sub_buttonW = 289;
 sub_buttonH = 65;
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/poweroff.bmp"),permsubX,20, sub_buttonW, sub_buttonH,tool_power_off, NULL));
@@ -216,8 +220,9 @@ gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boo
 /* gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/payload.bmp"),5,permsubY, 75, 75, NULL, NULL));
 gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Payloads", permsubX+20, permsubY+30, 150, 100, NULL, NULL));*/
 
+
 permsubY = permsubY+150;
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/gray_button.bmp"),permsubX,permsubY, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)5));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/gray_button.bmp"),permsubX,permsubY, 200, 75,(int (*)(void *))tool_Menus, (void*)5));
 gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Back", permsubX+20, permsubY+30, 150, 100, NULL, NULL));
 
 //remove
@@ -248,7 +253,46 @@ gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Nand",500, permsubY+
 
 if(submenu == 3)
 {
-gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuMMC",500, permsubY+30, 150, 100, NULL, NULL));
+//gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuMMC",500, permsubY+30, 150, 100, NULL, NULL));
+char* files = listfil(directory, "*", true);
+char* folder = listfol(directory, "*", true);
+		
+    u32 r = 0;
+    u32 w = 0;
+    u32 i = 0;
+	u32 y = 130;
+	u32 space = 70;
+//	gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(directory,600, y-20, 150, 100, (int (*)(void *))tool_Menus, (void*)33));
+			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/gray_button.bmp"),300, y-50, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)33));
+		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(directory, 300+20, y-50+30, 150, 100, NULL, NULL));
+	
+    while(folder[r * 256])
+    {
+			if(strlen(&folder[r * 256]) <= 100){			
+//			gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(&folder[r * 256],600, y+30, 150, 100, (int (*)(void *))tool_dir, &folder[r * 256]));
+			
+			
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/gray_button.bmp"),300, y+30, sub_buttonW, sub_buttonH,(int (*)(void *))tool_dir, (void*)&folder[r * 256]));
+		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(&folder[r * 256], 300+20, y+30+30, 150, 100, NULL, NULL));
+	y = y + space;
+
+			}
+	i++;
+	r++;
+	}
+
+   y = 130;
+    while(files[w * 256])
+    {
+			if(strlen(&files[w * 256]) <= 100){			
+			gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(&files[w * 256],900, y+30, 150, 100, NULL, NULL));
+	y = y + space - 30;
+			
+			}
+	i++;
+	w++;
+	}
+space = 50;
 }
 
 if(submenu == 4)
@@ -320,6 +364,11 @@ static int tool_power_off(void* param)
 
 int tool_Menus(u32 param)
 {
+if(param == 33){
+directory = "";
+gui_init_argon_menu();
+}
+
 //summom option menu
 if(param == 9){
 display_backlight_brightness(50, 1000);
@@ -333,6 +382,21 @@ return 0;
 
 //set menu number
 submenu = param;
+gui_init_argon_menu();
+return 0;
+}
+
+int tool_dir(char *param)
+{
+
+if(strlen(directory) <= 1)
+{
+directory = param;
+}else{
+strcat(directory, "/");
+strcat(directory, param);
+
+}
 gui_init_argon_menu();
 return 0;
 }
