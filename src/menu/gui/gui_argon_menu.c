@@ -254,15 +254,15 @@ gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boo
 if(submenu == 2)
 {
 gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Nand",500, 120, 150, 100, NULL, NULL));
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/backup1.bmp"),500,355, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)5));
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/backup2.bmp"),900,355, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)5));
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/backup3.bmp"),700,455, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)5));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/backup1.bmp"),500,355, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)20));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/backup2.bmp"),900,355, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)21));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/backup3.bmp"),700,455, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)22));
 }
 
 if(submenu == 3)
 {
 gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuMMC",500, 120, 150, 100, NULL, NULL));
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/emummc1.bmp"),500,355, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)5));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/emummc1.bmp"),500,355, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)23));
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/blank.bmp"),900,355, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)5));
 }
 
@@ -400,6 +400,43 @@ if(param == 33){
 directory = "";
 gui_init_argon_menu();
 }
+//iiii
+if(param == 20)
+{
+display_backlight_brightness(1, 1000);
+u8* buffer = (u8*)malloc(4);
+sd_save_to_file(buffer, 4, "raw.bk");
+launch_payload("atmosphere/boot_menu/bin/zbackup.bin");
+return 0;
+}
+
+if(param == 21)
+{
+display_backlight_brightness(1, 1000);
+u8* buffer = (u8*)malloc(4);
+sd_save_to_file(buffer, 4, "syslite.bk");
+launch_payload("atmosphere/boot_menu/bin/zbackup.bin");
+return 0;
+}
+
+if(param == 22)
+{
+display_backlight_brightness(1, 1000);
+u8* buffer = (u8*)malloc(4);
+sd_save_to_file(buffer, 4, "boot.bk");
+launch_payload("atmosphere/boot_menu/bin/zbackup.bin");
+return 0;
+}
+
+if(param == 23)
+{
+display_backlight_brightness(1, 1000);
+u8* buffer = (u8*)malloc(4);
+sd_save_to_file(buffer, 4, "emummc.bk");
+launch_payload("atmosphere/boot_menu/bin/zbackup.bin");
+return 0;
+}
+
 
 //summom option menu
 if(param == 9){
