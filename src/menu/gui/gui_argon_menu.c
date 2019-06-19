@@ -53,9 +53,9 @@ u32 buttonY = 0;
 u32 buttonX = 0;
 
 //menus
-u64 main_menu = 1;
+u64 main_menu = 0;
 u32 submenu = 0;
-u32 filemgr = 1;
+u32 filemgr = 0;
 
 //sub menus
 u32 permsubY = 0;
@@ -323,7 +323,7 @@ char* folder = listfol(directory, "*", true);
 			
 			
 		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/folder.bmp"),10, y+30, 500, 25,(int (*)(void *))tool_dir, (void*)&folder[r * 256]));
-		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(&folder[r * 256], strlen(&folder[r * 256])*8-50, y+35, 150, 100, NULL, NULL));
+		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(&folder[r * 256], strlen(&folder[r * 256])*8-40, y+35, 150, 100, NULL, NULL));
 	y = y + space;
 
 			}
