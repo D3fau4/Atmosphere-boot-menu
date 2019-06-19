@@ -53,7 +53,7 @@ u32 buttonY = 0;
 u32 buttonX = 0;
 
 //menus
-u32 main_menu = 0;
+u32 main_menu = 1;
 u32 submenu = 0;
 
 //sub menus
@@ -66,7 +66,7 @@ u32 sub_buttonH = 0;
 static int tool_reboot_rcm(void* param);
 static int tool_power_off(void* param);
 static int tool_emu(void* param);
-
+int tool_Menus(u32 param);
 
 /* Init needed menus for ArgonNX */
 void gui_init_argon_boot(void)
@@ -78,12 +78,12 @@ void gui_init_argon_boot(void)
 	
 	//show display without icons
     gui_menu_open2(menu);
-/*	
+	
 	//waith user input
     bool cancel_auto_chainloading = btn_read() & BTN_VOL_UP;
     if (!cancel_auto_chainloading)
 	launch_payload("atmosphere/boot_menu/bin/Atmosphere.bin");
-*/
+
 gui_menu_pool_cleanup();
 gui_init_argon_menu();
 }
@@ -185,59 +185,70 @@ gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boo
 //second menu and sub menus
 
 //unchanched icons
-permsubY = 150;
-permsubX = 10;
+permsubY = 110;
+permsubX = 80;
 sub_buttonW = 200;
 sub_buttonH = 75;
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/gray_button.bmp"),permsubX,10, sub_buttonW, sub_buttonH,NULL, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/gray_button.bmp"),permsubX,20, sub_buttonW, sub_buttonH,tool_power_off, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Poweroff", permsubX+20, 50, 150, 100, NULL, NULL));
 
-permsubY = permsubY+100;
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/gray_button.bmp"),permsubX,permsubY, sub_buttonW, sub_buttonH,NULL, NULL));
-gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("sample", permsubX+20, permsubY+30, 150, 100, tool_emu, NULL));
-
-
-permsubY = permsubY+100;
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/gray_button.bmp"),permsubX,permsubY, sub_buttonW, sub_buttonH,NULL, NULL));
-gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("sample", permsubX+20, permsubY+30, 150, 100, NULL, NULL));
+permsubY = permsubY+80;
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/gray_button.bmp"),permsubX,permsubY, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)1));
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("AutoRCM", permsubX+20, permsubY+30, 150, 100, NULL, NULL));
 
 
-permsubY = permsubY+100;
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/gray_button.bmp"),permsubX,permsubY, sub_buttonW, sub_buttonH,NULL, NULL));
-gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("sample", permsubX+20, permsubY+30, 150, 100, NULL, NULL));
+permsubY = permsubY+80;
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/gray_button.bmp"),permsubX,permsubY, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)2));
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("NAND", permsubX+20, permsubY+30, 150, 100, NULL, NULL));
 
 
-permsubY = permsubY+100;
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/gray_button.bmp"),permsubX,permsubY, sub_buttonW, sub_buttonH,NULL, NULL));
-gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("sample", permsubX+20, permsubY+30, 150, 100, NULL, NULL));
+permsubY = permsubY+80;
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/gray_button.bmp"),permsubX,permsubY, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)3));
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuMMC", permsubX+20, permsubY+30, 150, 100, NULL, NULL));
+
+
+permsubY = permsubY+80;
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/gray_button.bmp"),permsubX,permsubY, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)4));
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Payloads", permsubX+20, permsubY+30, 150, 100, NULL, NULL));
+
+permsubY = permsubY+150;
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/gray_button.bmp"),permsubX,permsubY, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)5));
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Back", permsubX+20, permsubY+30, 150, 100, NULL, NULL));
 
 
 if(submenu == 0)
 {
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("welcome",500, permsubY+30, 150, 100, NULL, NULL));
 }
 
 if(submenu == 1)
 {
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("AutoRCM",500, permsubY+30, 150, 100, NULL, NULL));
+
 }
 
 if(submenu == 2)
 {
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Nand",500, permsubY+30, 150, 100, NULL, NULL));
+
 }
 
 if(submenu == 3)
 {
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuMMC",500, permsubY+30, 150, 100, NULL, NULL));
 }
 
 if(submenu == 4)
 {
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Payloads",500, permsubY+30, 150, 100, NULL, NULL));
 }
 
 if(submenu == 5)
 {
+
 }
 
-if(submenu == 6)
-{
-}
+
 
 }
 
@@ -266,6 +277,17 @@ static int tool_power_off(void* param)
     power_off();
     return 0;
 }
+
+int tool_Menus(u32 param)
+{
+if(submenu == param)
+return 0;
+
+submenu = param;
+gui_init_argon_menu();
+return 0;
+}
+
 static int tool_emu(void* param)
 {
 sd_mount();
