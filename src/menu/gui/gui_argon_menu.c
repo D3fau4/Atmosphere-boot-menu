@@ -334,9 +334,12 @@ char* folder = listfol(directory, "*", true);
    y = 90;
     while(files[w * 256])
     {
-			if(strlen(&files[w * 256]) <= 100){			
-			gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(&files[w * 256],800, y+30, 150, 100, NULL, NULL));
-	y = y + space - 30;
+			if(strlen(&files[w * 256]) <= 100){
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/files.bmp"),600+10, y+30, 500, 25,(int (*)(void *))tool_dir, (void*)&files[w * 256]));
+		gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(&files[w * 256], 800+120+20, y+35, 1, 1, NULL, NULL));
+			
+//			gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(&files[w * 256],800, y+30, 150, 100, NULL, NULL));
+	y = y + space;
 			
 			}
 	i++;
