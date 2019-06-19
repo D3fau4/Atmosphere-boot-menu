@@ -449,6 +449,17 @@ if (sd_file_exists ("emummc/emummc.ini"))
 f_rename("emummc/emummc.ini","emummc/emummc.ini.bak");
 }else{
 f_rename("emummc/emummc.ini.bak","emummc/emummc.ini");
+
+char *str;
+    void *buf;
+    buf = sd_file_read("emummc/emummc.ini");
+    str = buf;
+    char* payload_wo_bin = str_replace(str, "enabled = 0", "enabled = 1");
+    FIL fp;
+    f_open(&fp, "emummc/emummc.ini", FA_WRITE);
+    f_puts(payload_wo_bin, &fp);
+    f_close(&fp);
+
 }
     gui_init_argon_menu();
 return 0;
