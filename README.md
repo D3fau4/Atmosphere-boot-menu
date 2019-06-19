@@ -1,3 +1,5 @@
+![Banner](sd-card-example/banner.png)
+
 ## What is Atmosphere boot menu?
 Atmosphere boot menu is a simple boot menu based on Argon-NX that tries to be similar to the SXOS menu.
 
@@ -17,6 +19,6 @@ Atmosphere boot menu is a simple boot menu based on Argon-NX that tries to be si
 * turn autoRCM on or off.
 
 ## Credits
-* Hekate for her bootloader.
-* Argon-NX for being the base of the code.
-* Atmosphere por su CFW.
+* Hekate for her bootloader. https://github.com/CTCaer/hekate
+* Argon-NX for being the base of the code. https://github.com/Guillem96/argon-nx
+* Atmosphere por su CFW. https://github.com/Atmosphere-NX/Atmosphere
