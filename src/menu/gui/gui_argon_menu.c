@@ -54,8 +54,8 @@ u32 buttonY = 0;
 u32 buttonX = 0;
 
 //menus
-u64 main_menu = 1;
-u32 submenu = 1;
+u64 main_menu = 0;
+u32 submenu = 0;
 u32 filemgr = 0;
 
 //sub menus
@@ -222,7 +222,7 @@ gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boo
 //gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("File MGR", 1000+20, 20+30, 150, 100, NULL, NULL));
 
 permsubY = permsubY+80;
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/RCM.bmp"),permsubX,permsubY, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)1));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/services.bmp"),permsubX,permsubY, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)1));
 /* gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/RCM.bmp"),5,permsubY, 75, 75, NULL, NULL));
 gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("AutoRCM", permsubX+20, permsubY+30, 150, 100, NULL, NULL));*/
 
