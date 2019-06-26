@@ -265,26 +265,24 @@ gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("welcome to the optio
 if(submenu == 1)
 {
 u32 linw=0;
-u32 linealY = 50;
+u32 linealY = 100;
 u32 linealX = 500;
 u32 separ = 80;
-/*
+
 //themas
-if (sd_file_exists("atmosphere/titles//exefs.nsp"))
-{
 linw++;
 linealY = linealY + separ;
 if(linw == 4)
 linealX=1000;
-	if (sd_file_exists("atmosphere/titles//flags/boot2.flag"))
+	if (sd_file_exists("atmosphere/titles/0100000000001000/fsmitm.flag"))
 	{
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/bon.bmp"),linealX, linealY, 200, 75,NULL, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/gray_button.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises, (void*)0));
 	}else{
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/boff.bmp"),linealX, linealY, 200, 75,NULL, NULL));
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/boff.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises, (void*)1));
 	}
-gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("",linealX+30, linealY+30, 150, 100, NULL, NULL));
-}
-*/
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Themes",linealX+30, linealY+30, 150, 100, NULL, NULL));
+
+
 //ftp
 if (sd_file_exists("atmosphere/titles/420000000000000E/exefs.nsp"))
 {
@@ -292,7 +290,7 @@ linw++;
 if(linw == 4)
 {
 linealX=linealX+300;
-linealY = 50;
+linealY = 100;
 linw=0;
 }
 linealY = linealY + separ;
@@ -312,7 +310,7 @@ linw++;
 if(linw == 4)
 {
 linealX=linealX+300;
-linealY = 50;
+linealY = 100;
 linw=0;
 }
 linealY = linealY + separ;
@@ -332,7 +330,7 @@ linw++;
 if(linw == 4)
 {
 linealX=linealX+300;
-linealY = 50;
+linealY = 100;
 linw=0;
 }
 linealY = linealY + separ;
@@ -352,7 +350,7 @@ linw++;
 if(linw == 4)
 {
 linealX=linealX+300;
-linealY = 50;
+linealY = 100;
 linw=0;
 }
 linealY = linealY + separ;
@@ -372,7 +370,7 @@ linw++;
 if(linw == 4)
 {
 linealX=linealX+300;
-linealY = 50;
+linealY = 100;
 linw=0;
 }
 linealY = linealY + separ;
@@ -392,7 +390,7 @@ linw++;
 if(linw == 4)
 {
 linealX=linealX+300;
-linealY = 50;
+linealY = 100;
 linw=0;
 }
 linealY = linealY + separ;
