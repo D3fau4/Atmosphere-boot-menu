@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include "utils/util.h"
 #include "utils/btn.h"
 #include "menu/gui/gui_argon_menu.h"
 #include "menu/gui/gui_menu.h"
@@ -40,8 +41,8 @@
 #define MARGIN_TOP 330
 #define MARGIN_LEFT 45
 //antes 45
-//emunand trigger
-u32 emuNAND = 1;
+
+//icon size
 u32 iconH = 0;
 u32 iconW = 0;
 u32 iconY = 0;
@@ -53,8 +54,8 @@ u32 buttonY = 0;
 u32 buttonX = 0;
 
 //menus
-u64 main_menu = 0;
-u32 submenu = 0;
+u64 main_menu = 1;
+u32 submenu = 1;
 u32 filemgr = 0;
 
 //sub menus
@@ -63,16 +64,20 @@ u32 permsubX = 0;
 u32 sub_buttonW = 0;
 u32 sub_buttonH = 0;
 
+//some indicators
+u32 onemi = 0;
+u32 retir = 0;
+
 //dinamic directory
 char *directory = "";
 
 //funtions
 static int tool_reboot_rcm(void* param);
 static int tool_power_off(void* param);
-static int tool_emu(void* param);
+static int tool_emu(u32 param);
 int tool_dir(char *param);
 int tool_Menus(u32 param);
-
+int tool_servises(u32 param);
 /* Init needed menus for ArgonNX */
 void gui_init_argon_boot(void)
 {
@@ -150,16 +155,30 @@ gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Options", buttonX + 
         }
 }*/
 
-if (sd_file_exists("emummc/emummc.ini") || sd_file_exists("emummc/emummc.ini.bak"))
+if (sd_file_exists("emummc/emummc.ini"))
 {
-    if (sd_file_exists("emummc/emummc.ini"))
-        {
-		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/button.bmp"),139,620, buttonH, buttonW,tool_emu, NULL)); //630
-        }
-        if (sd_file_exists("emummc/emummc.ini.bak"))
-        {
-        gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/buttoff.bmp"),139,620, buttonH, buttonW,tool_emu, NULL)); //630
-        }
+
+char *str = sd_file_read("emummc/emummc.ini");
+if(retir == 0)
+{
+	if(strlen(str) != strlen(str_replace(str, " ", "")))
+	{
+	str = str_replace(str, " ", "");
+	u32 size = strlen(str)-1;
+	sd_save_to_file(str,size,"emummc/emummc.ini");
+	}
+retir = 1;
+	if(strlen(str) != strlen(str_replace(str, "mummc_enabled=1", "")))
+	{retir = 2;}
+}
+//	gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(str, 10, 100, 150, 200, NULL, NULL)); //- 3, + 260//debug
+	if(retir == 2)
+	{
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/button.bmp"),139,620, buttonH, buttonW,(int (*)(void *))tool_emu, (void*)0)); //630
+	}else{
+        gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/buttoff.bmp"),139,620, buttonH, buttonW,(int (*)(void *))tool_emu, (void*)1)); //630
+	}
+free(str);
 }
 
 /*
@@ -239,16 +258,159 @@ display_backlight_brightness(100, 1000);
 
 if(submenu == 0)
 {
-
 gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("welcome to the option menu",700, 300, 150, 100, NULL, NULL));
 
 }
 
 if(submenu == 1)
 {
+u32 linw=0;
+u32 linealY = 50;
+u32 linealX = 500;
+u32 separ = 80;
+/*
+//themas
+if (sd_file_exists("atmosphere/titles//exefs.nsp"))
+{
+linw++;
+linealY = linealY + separ;
+if(linw == 4)
+linealX=1000;
+	if (sd_file_exists("atmosphere/titles//flags/boot2.flag"))
+	{
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/bon.bmp"),linealX, linealY, 200, 75,NULL, NULL));
+	}else{
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/boff.bmp"),linealX, linealY, 200, 75,NULL, NULL));
+	}
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("",linealX+30, linealY+30, 150, 100, NULL, NULL));
+}
+*/
+//ftp
+if (sd_file_exists("atmosphere/titles/420000000000000E/exefs.nsp"))
+{
+linw++;
+if(linw == 4)
+{
+linealX=linealX+300;
+linealY = 50;
+linw=0;
+}
+linealY = linealY + separ;
+	if (sd_file_exists("atmosphere/titles/420000000000000E/flags/boot2.flag"))
+	{
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/bon.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises, (void*)2));
+	}else{
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/boff.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises, (void*)3));
+	}
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("FTP",linealX+30, linealY+30, 150, 100, NULL, NULL));
+}
+
+//Emuiibo
+if (sd_file_exists("atmosphere/titles/0100000000000352/exefs.nsp"))
+{
+linw++;
+if(linw == 4)
+{
+linealX=linealX+300;
+linealY = 50;
+linw=0;
+}
+linealY = linealY + separ;
+	if (sd_file_exists("atmosphere/titles/0100000000000352/flags/boot2.flag"))
+	{
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/bon.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises, (void*)4));
+	}else{
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/boff.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises, (void*)5));
+	}
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Emuiio",linealX+30, linealY+30, 150, 100, NULL, NULL));
+}
+
+//Lan Play
+if (sd_file_exists("atmosphere/titles/4200000000000010/exefs.nsp"))
+{
+linw++;
+if(linw == 4)
+{
+linealX=linealX+300;
+linealY = 50;
+linw=0;
+}
+linealY = linealY + separ;
+	if (sd_file_exists("atmosphere/titles/4200000000000010/flags/boot2.flag"))
+	{
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/bon.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises, (void*)6));
+	}else{
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/boff.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises, (void*)7));
+	}
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Lan Play",linealX+30, linealY+30, 150, 100, NULL, NULL));
+}
+
+//HDI
+if (sd_file_exists("atmosphere/titles/0100000000000FAF/exefs.nsp"))
+{
+linw++;
+if(linw == 4)
+{
+linealX=linealX+300;
+linealY = 50;
+linw=0;
+}
+linealY = linealY + separ;
+	if (sd_file_exists("atmosphere/titles/0100000000000FAF/flags/boot2.flag"))
+	{
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/bon.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises, (void*)8));
+	}else{
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/boff.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises, (void*)9));
+	}
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("HDI",linealX+30, linealY+30, 150, 100, NULL, NULL));
+}
+
+//sysplay
+if (sd_file_exists("atmosphere/titles/420000000000000B/exefs.nsp"))
+{
+linw++;
+if(linw == 4)
+{
+linealX=linealX+300;
+linealY = 50;
+linw=0;
+}
+linealY = linealY + separ;
+	if (sd_file_exists("atmosphere/titles/420000000000000B/flags/boot2.flag"))
+	{
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/bon.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises, (void*)10));
+	}else{
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/boff.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises, (void*)11));
+	}
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("sysplay",linealX+30, linealY+30, 150, 100, NULL, NULL));
+}
+
+//sysclock
+if (sd_file_exists("atmosphere/titles/00FF0000636C6BFF/exefs.nsp"))
+{
+linw++;
+if(linw == 4)
+{
+linealX=linealX+300;
+linealY = 50;
+linw=0;
+}
+linealY = linealY + separ;
+	if (sd_file_exists("atmosphere/titles/00FF0000636C6BFF/flags/boot2.flag"))
+	{
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/bon.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises, (void*)12));
+	}else{
+gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/boff.bmp"),linealX, linealY, 200, 75,(int (*)(void *))tool_servises, (void*)13));
+	}
+gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("sysclock",linealX+30, linealY+30, 150, 100, NULL, NULL));
+}
+
+
+/*
 gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("AutoRCM",500, 120, 150, 100, NULL, NULL));
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/autorcm1.bmp"),500,355, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)5));
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/autorcm2.bmp"),900,355, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)5));
+*/
 }
 
 if(submenu == 2)
@@ -368,6 +530,7 @@ display_backlight_brightness(100, 1000);
 }
 
 
+
 static int tool_reboot_rcm(void* param)
 {
     gui_menu_pool_cleanup();
@@ -380,6 +543,61 @@ static int tool_power_off(void* param)
     gui_menu_pool_cleanup();
     power_off();
     return 0;
+}
+
+int tool_servises(u32 param)
+{
+//Themes
+if(param == 0)
+f_unlink("atmosphere/titles/0100000000001000/fsmitm.flag");
+
+if(param == 1)
+sd_save_to_file("",0,"atmosphere/titles/0100000000001000/fsmitm.flag");
+
+//ftp
+if(param == 2)
+f_unlink("atmosphere/titles/420000000000000E/flags/boot2.flag");
+
+if(param == 3)
+sd_save_to_file("",0,"atmosphere/titles/420000000000000E/flags/boot2.flag");
+
+//Emuiibo
+if(param == 4)
+f_unlink("atmosphere/titles/0100000000000352/flags/boot2.flag");
+
+if(param == 5)
+sd_save_to_file("",0,"atmosphere/titles/0100000000000352/flags/boot2.flag");
+
+//lan Play
+if(param == 6)
+f_unlink("atmosphere/titles/4200000000000010/flags/boot2.flag");
+
+if(param == 7)
+sd_save_to_file("",0,"atmosphere/titles/4200000000000010/flags/boot2.flag");
+
+//HDI
+if(param == 8)
+f_unlink("atmosphere/titles/0100000000000FAF/flags/boot2.flag");
+
+if(param == 9)
+sd_save_to_file("",0,"atmosphere/titles/0100000000000FAF/flags/boot2.flag");
+
+//sysplay
+if(param == 10)
+f_unlink("atmosphere/titles/420000000000000B/flags/boot2.flag");
+
+if(param == 11)
+sd_save_to_file("",0,"atmosphere/titles/420000000000000B/flags/boot2.flag");
+
+//sysclock
+if(param == 12)
+f_unlink("atmosphere/titles/00FF0000636C6BFF/flags/boot2.flag");
+
+if(param == 13)
+sd_save_to_file("",0,"atmosphere/titles/00FF0000636C6BFF/flags/boot2.flag");
+
+gui_init_argon_menu();
+return 0;
 }
 
 int tool_Menus(u32 param)
@@ -470,11 +688,36 @@ gui_init_argon_menu();
 return 0;
 }
 
-static int tool_emu(void* param)
+static int tool_emu(u32 param)
 {
-sd_mount();
-        if (!g_sd_mounted)
-        {return 0;}
+
+if (!sd_mount()){BootStrapNX();}//check sd
+		
+if(param == 1)
+{
+char *str1 = sd_file_read("emummc/emummc.ini");
+char* payload_wo_bin = str_replace(str1, "enabled=0", "enabled=1");
+FIL op;
+f_open(&op, "emummc/emummc.ini", FA_READ);
+u32 size = f_size(&op);
+f_close(&op);
+sd_save_to_file(payload_wo_bin,size,"emummc/emummc.ini");
+retir = 2;
+}
+
+if(param == 0)
+{
+char *str1 = sd_file_read("emummc/emummc.ini");
+char* payload_wo_bin = str_replace(str1, "enabled=1", "enabled=0");
+FIL op;
+f_open(&op, "emummc/emummc.ini", FA_READ);
+u32 size = f_size(&op);
+f_close(&op);
+sd_save_to_file(payload_wo_bin,size,"emummc/emummc.ini");
+retir = 1;
+}
+
+/*	
 if (sd_file_exists ("emummc/emummc.ini"))
 {f_unlink("emummc/emummc.ini.bak");}
 
@@ -484,17 +727,12 @@ f_rename("emummc/emummc.ini","emummc/emummc.ini.bak");
 }else{
 f_rename("emummc/emummc.ini.bak","emummc/emummc.ini");
 
-char *str;
-    void *buf;
-    buf = sd_file_read("emummc/emummc.ini");
-    str = buf;
-    char* payload_wo_bin = str_replace(str, "enabled = 0", "enabled = 1");
     FIL fp;
     f_open(&fp, "emummc/emummc.ini", FA_WRITE);
     f_puts(payload_wo_bin, &fp);
     f_close(&fp);
-
-}
-    gui_init_argon_menu();
+*/
+gfx_swap_buffer(&g_gfx_ctxt);
+	gui_init_argon_menu();
 return 0;
 }
