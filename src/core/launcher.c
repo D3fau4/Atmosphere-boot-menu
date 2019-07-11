@@ -59,6 +59,7 @@ void reloc_patcher(u32 payload_size)
 
 int launch_payload(char *path)
 {
+if (!sd_mount()){BootStrapNX();}//check sd
     FIL fp;
     if (f_open(&fp, path, FA_READ))
     {

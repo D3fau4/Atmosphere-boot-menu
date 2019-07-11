@@ -97,7 +97,7 @@ gui_init_argon_menu();
 
 void gui_init_argon_menu(void)
 {
-
+if (!sd_mount()){BootStrapNX();}//check sd
     /* Init pool for menu */
     gui_menu_pool_init();
 
@@ -175,7 +175,7 @@ sub_buttonH = 65;
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/poweroff.bmp"),permsubX,20, sub_buttonW, sub_buttonH,tool_power_off, NULL));
 
 permsubY = permsubY+80;
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/RCM.bmp"),permsubX,permsubY, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)1));
+//gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/RCM.bmp"),permsubX,permsubY, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)1));
 
 permsubY = permsubY+80;
 gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/nand.bmp"),permsubX,permsubY, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)2));
@@ -287,7 +287,7 @@ static int tool_power_off(void* param)
 
 int tool_Menus(u32 param)
 {
-
+if (!sd_mount()){BootStrapNX();}//check sd
 	//iiii
 	if(param == 20)
 	{

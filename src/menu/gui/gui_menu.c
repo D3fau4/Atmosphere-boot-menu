@@ -28,7 +28,7 @@
 #include "core/custom-gui.h"
 
 #include <string.h>
-
+#include "utils/fs_utils.h"
 #define MINOR_VERSION 1
 #define MAJOR_VERSION 0
 
@@ -116,7 +116,7 @@ int gui_menu_open(gui_menu_t *menu)
      * flush buffers
      */
     gui_menu_render_menu(menu);
-
+sd_unmount();
 	while (gui_menu_update(menu))
     ;
 
