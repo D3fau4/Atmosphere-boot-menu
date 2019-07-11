@@ -63,7 +63,7 @@ u32 btn_wait_timeout(u32 time_ms, u32 mask)
 {
 	u32 timeout = get_tmr_ms() + time_ms;
 	u32 res = btn_read() & mask;
-//msleep(1000);
+msleep(1000);
  while (get_tmr_ms() < timeout)
 	{if (btn_read() & mask)break;}
 
