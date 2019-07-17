@@ -31,7 +31,7 @@
 #include "utils/fs_utils.h"
 #define MINOR_VERSION 1
 #define MAJOR_VERSION 0
-
+char Sversion[4];
 
 /* Render the menu */
 static void gui_menu_render_menu(gui_menu_t*);
@@ -73,6 +73,19 @@ static void gui_menu_draw_background(gui_menu_t* menu)
     /* Render title */
     if (!render_custom_title(menu->custom_gui)) 
     {
+	char *str;
+		if (g_sd_mounted){
+			void *buf;
+			buf = sd_file_read("Kaiser.txt");
+			str = buf;
+			Sversion[0] = str[0];
+			Sversion[1] = str[1];
+			Sversion[2] = str[2];
+			//Sversion[3] = str[3];
+		}	
+	gfx_con_setpos(&g_gfx_con, 1050, 5);
+	gfx_printf(&g_gfx_con, "Kaiser v%s", Sversion);
+
        // g_gfx_con.scale = 4;
        // gfx_con_setpos(&g_gfx_con, 480, 20);
        // gfx_printf(&g_gfx_con, "ArgonNX v%d.%d", MAJOR_VERSION, MINOR_VERSION);

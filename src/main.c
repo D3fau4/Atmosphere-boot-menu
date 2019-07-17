@@ -78,6 +78,15 @@ void ipl_main()
     } else {
         gfx_printf(&g_gfx_con, "No sd card found...\n");
     }
+		gfx_swap_buffer(&g_gfx_ctxt);
+		g_gfx_con.mute = 0;
+		g_gfx_con.scale = 12;
+		gfx_con_setpos(&g_gfx_con, 100, 300);
+		//gfx_con_setcol(&g_gfx_con, 0xFF008F39, 0xFF726F68, 0xFF191414);
+		gfx_printf(&g_gfx_con, "BootStrapNX");
+		gfx_swap_buffer(&g_gfx_ctxt);
+		msleep(5000);
+	//power_off();
 	BootStrapNX();
     /* If payload launch fails wait for user input to reboot the switch */
     gfx_printf(&g_gfx_con, "Press power button to reboot into RCM...\n\n");

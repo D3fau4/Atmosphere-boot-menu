@@ -57,24 +57,17 @@ u32 buttonX = 0;
 u64 main_menu = 0;
 u32 submenu = 0;
 
-//sub menus
-u32 permsubY = 0;
-u32 permsubX = 0;
-u32 sub_buttonW = 0;
-u32 sub_buttonH = 0;
-
 //some indicators
-u32 onemi = 0;
 u32 retir = 0;
 
 
 
 //funtions
+int tool_CFW(void* param);
+static int tool_emu(u32 param);
 static int tool_reboot_rcm(void* param);
 static int tool_power_off(void* param);
-static int tool_emu(u32 param);
-int tool_Menus(u32 param);
-int tool_servises(u32 param);
+
 /* Init needed menus for ArgonNX */
 void gui_init_argon_boot(void)
 {
@@ -85,50 +78,9 @@ void gui_init_argon_boot(void)
 	
 	//show display without icons
     gui_menu_open2(menu);
-	
-	//waith user input
-    bool cancel_auto_chainloading = btn_read() & BTN_VOL_UP;
-    if (!cancel_auto_chainloading)
-	launch_payload("atmosphere/boot_menu/bin/Atmosphere.bin");
-
-gui_menu_pool_cleanup();
-gui_init_argon_menu();
-}
-
-void gui_init_argon_menu(void)
-{
-if (!sd_mount()){BootStrapNX();}//check sd
-    /* Init pool for menu */
-    gui_menu_pool_init();
-
-    gui_menu_t* menu = gui_menu_create("ArgonNX");
-	//main menu
-if(main_menu == 0)
-{
-	//control panel
-	iconH = 300;
-	iconW = 300;
-	iconY = 210;
-	//antes 145 316
-	iconX = 145;
-
-	buttonH = 289;
-	buttonW = 65;
-	buttonY = iconY + 300;
-	buttonX = iconX;
-
-	//create menu entries
-	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/boot-CFW.bmp"),iconX, iconY, iconW, iconH, (int (*)(void *))launch_payload, (void*)"atmosphere/boot_menu/bin/Atmosphere.bin"));
-	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/boot-Stock.bmp"),iconX + 350, iconY, iconW, iconH, (int (*)(void *))launch_payload, (void*)"atmosphere/boot_menu/bin/stock.bin"));
-	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/gear.bmp"),iconX + 700, iconY, iconW, iconH, (int (*)(void *))tool_Menus, (void*)9));
-
-
 	if (sd_file_exists("emummc/emummc.ini"))
 	{
-
-		char *str = sd_file_read("emummc/emummc.ini");
-		if(retir == 0)
-		{
+			char *str = sd_file_read("emummc/emummc.ini");
 			//delete incompatible prefix
 			if(strstr(str,"emummc_") != NULL)
 			{
@@ -144,121 +96,67 @@ if(main_menu == 0)
 			u32 size = strlen(str)-1;
 			sd_save_to_file(str,size,"emummc/emummc.ini");
 			}
-			//close this funtion
-			retir = 1;
-			
+
 			//indicate emummc ON
 			if(strstr(str,"enabled=1") != NULL)
-			{retir = 2;}
-		}
-		
-		if(retir == 2)
-		{
-			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/button.bmp"),139,620, buttonH, buttonW,(int (*)(void *))tool_emu, (void*)0)); //630
-		}else{
-			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/buttoff.bmp"),139,620, buttonH, buttonW,(int (*)(void *))tool_emu, (void*)1)); //630
-		}
-	free(str);
+			{retir = 1;}
 	}
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/reboot.bmp"),900, 620, buttonH, buttonW, tool_reboot_rcm, NULL));//655
+
+	
+	//waith user input
+    bool cancel_auto_chainloading = btn_read() & BTN_VOL_UP;
+    if (!cancel_auto_chainloading)
+	{
+	if(retir == 1)
+	tool_CFW(NULL);
+	
+	if (sd_file_exists("license.txt"))
+	tool_CFW(NULL);
+	}
+
+gui_menu_pool_cleanup();
+gui_init_argon_menu();
+}
+
+void gui_init_argon_menu(void)
+{
+if (!sd_mount()){BootStrapNX();}//check sd
+    /* Init pool for menu */
+    gui_menu_pool_init();
+
+    gui_menu_t* menu = gui_menu_create("ArgonNX");
+
+
+	//control panel
+	iconH = 300;
+	iconW = 300;
+	iconY = 210;
+	iconX = 145;//antes 145 316
+
+	buttonH = 289;
+	buttonW = 65;
+	buttonY = 625;
+	buttonX = iconX;
+
+	//create menu entries
+	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/boot-CFW.bmp"),iconX, iconY, iconW, iconH, tool_CFW ,NULL));
+	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/boot-Stock.bmp"),iconX + 350, iconY, iconW, iconH, (int (*)(void *))launch_payload, (void*)"atmosphere/boot_menu/bin/stock.bin"));
+	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/gear.bmp"),iconX + 700, iconY, iconW, iconH,(int (*)(void *))launch_payload, (void*)"atmosphere/boot_menu/bin/zBackup.bin"));
+
+	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/poweroff.bmp"),buttonX+5-30,buttonY, buttonH, buttonW,tool_power_off, NULL));
+	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/screenshot.bmp"), buttonX+5 + 350, buttonY, buttonH, buttonW,(int (*)(void *))screenshot, NULL));
+	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/reboot.bmp"),buttonX+5 + 730, buttonY, buttonH, buttonW, tool_reboot_rcm, NULL));//655
+
+	if (sd_file_exists("emummc/emummc.ini"))
+	{
+		if(retir == 1)
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/button.bmp"),buttonX+5-30,120, buttonH, buttonW,(int (*)(void *))tool_emu, (void*)0)); //630
+		else
+		gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/buttoff.bmp"),buttonX+5-30,120, buttonH, buttonW,(int (*)(void *))tool_emu, (void*)1)); //630
+	}
+
 
 //gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/power.bmp"),900, 645,buttonH, 12, tool_power_off, NULL));//655
-//end of main menu
-}else{
-//second menu and sub menus
-
-//unchanched icons
-permsubY = 110;
-permsubX = 80;
-sub_buttonW = 289;
-sub_buttonH = 65;
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/poweroff.bmp"),permsubX,20, sub_buttonW, sub_buttonH,tool_power_off, NULL));
-
-permsubY = permsubY+80;
-//gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/RCM.bmp"),permsubX,permsubY, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)1));
-
-permsubY = permsubY+80;
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/nand.bmp"),permsubX,permsubY, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)2));
-
-permsubY = permsubY+80;
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/emummc.bmp"),permsubX,permsubY, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)3));
-
-permsubY = permsubY+80;
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/payload.bmp"),permsubX,permsubY, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)4));
-
-permsubY = permsubY+150;
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/back.bmp"),permsubX,625, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)5));
-//gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Back", permsubX+20, permsubY+30, 150, 100, NULL, NULL));
-
-//remove
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/screenshot.bmp"), 500, 625, sub_buttonW, sub_buttonH,(int (*)(void *))screenshot, NULL));
-//remove
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/bar.bmp"),0, 100, 1280, 2, NULL, NULL));
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/bar.bmp"),0, 610, 1280, 2, NULL, NULL));
-gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/barh.bmp"),610, 0, 1280, 2, NULL, NULL));
-display_backlight_brightness(100, 1000);
-
-	if(submenu == 0)
-	{
-	gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Welcome to the Option Menu.",700, 300, 150, 100, NULL, NULL));
-	}
-
-	if(submenu == 1)
-	{
-	gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Please, if your console is a patched unit, DONT ACTIVATE AUTORCM.",500, 120, 150, 100, NULL, NULL));
-	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/autorcm1.bmp"),500,355, sub_buttonW, sub_buttonH, NULL, NULL));//(int (*)(void *))tool_Menus, (void*)5));
-	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/autorcm2.bmp"),900,355, sub_buttonW, sub_buttonH, NULL, NULL));//(int (*)(void *))tool_Menus, (void*)5));
-	}
-
-	if(submenu == 2)
-	{
-	gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Nand Backup",500, 120, 150, 100, NULL, NULL));
-	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/backup1.bmp"),500,355, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)20));
-	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/backup2.bmp"),900,355, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)21));
-	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/backup3.bmp"),700,455, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)22));
-	}
-
-	if(submenu == 3)
-	{
-	gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("EmuMMC Creation",500, 120, 150, 100, NULL, NULL));
-	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/emummc1.bmp"),500,355, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)23));
-	gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/blank.bmp"),900,355, sub_buttonW, sub_buttonH,(int (*)(void *))tool_Menus, (void*)5));
-	}
-
-	if(submenu == 4)
-	{
-	gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap("Please select the payload you wish to launch below",650, 120, 150, 100, NULL, NULL));
-	char* payloads = dirlist("", "*.bin", false);
-    u32 i = 0;
-	u32 y = 180;
-	u32 x = 500;
-		while(payloads[i * 256])
-		{
-			if(strlen(&payloads[i * 256]) <= 100)
-			{			
-			gui_menu_append_entry(menu,gui_create_menu_entry("",sd_file_read("atmosphere/boot_menu/gfx/files.bmp"),x, y+30, 500, 25,(int (*)(void *))launch_payload, (void*)&payloads[i * 256]));
-			gui_menu_append_entry(menu,gui_create_menu_entry_no_bitmap(&payloads[i * 256], x+strlen(&payloads[i * 256])*8-40, y+35, 150, 100, NULL, NULL));						
-			}
-		y = y + 70;
-		if(i >= 6)//limit payloads to 6
-		break;
-		i++;	
-		}
-
-	}
-
-	if(submenu == 5)//back to main menu
-	{
-	display_backlight_brightness(50, 1000);
-	main_menu = 0;
-	submenu = 0;
-	gui_init_argon_menu();
-	}
-
-
-}
-//permanent icons for all
-
 
 //menu int
 display_backlight_brightness(100, 1000);
@@ -285,57 +183,57 @@ static int tool_power_off(void* param)
     return 0;
 }
 
-int tool_Menus(u32 param)
+int tool_CFW(void* param)
 {
 if (!sd_mount()){BootStrapNX();}//check sd
-	//iiii
-	if(param == 20)
+
+	//reactivate emummc
+	if(retir == 0)
 	{
-	display_backlight_brightness(1, 1000);
-	sd_save_to_file("", 0, "raw.bk");
-	launch_payload("atmosphere/boot_menu/bin/zbackup.bin");
-	return 0;
+		char *str1 = sd_file_read("emummc/emummc.ini");
+		char* payload_wo_bin = str_replace(str1, "enabled=0", "enabled=1");
+		FIL op;
+		f_open(&op, "emummc/emummc.ini", FA_READ);
+		u32 size = f_size(&op);
+		f_close(&op);
+		sd_save_to_file(payload_wo_bin,size,"emummc/emummc.ini");
+		retir = 1;
+	}
+	if(sd_file_exists("license.txt"))
+	sd_save_to_file("",0,"atmosphere/titles/0100000000001000/fsmitm.flag");
+	
+	//panic
+	if (btn_read() & BTN_VOL_DOWN)
+	{
+	gfx_clear_color(&g_gfx_ctxt, 0xFFFFFFFF);
+	gfx_swap_buffer(&g_gfx_ctxt);
+		msleep(2000);
+	f_unlink("/atmosphere/titles/0100000000001000/fsmitm.flag");	
+	//this is a panic option so i will disable the servises also
+	f_unlink("/atmosphere/titles/420000000000000E/flags/boot2.flag");
+	f_unlink("/atmosphere/titles/0100000000000352/flags/boot2.flag");
+	f_unlink("/atmosphere/titles/4200000000000010/flags/boot2.flag");
+	f_unlink("/atmosphere/titles/420000000000000B/flags/boot2.flag");
+	f_unlink("/atmosphere/titles/0100000000000FAF/flags/boot2.flag");
+	}
+	
+	//Activate AutoBoot
+	if(!sd_file_exists("license.txt"))
+	{
+				FIL fp;
+				f_open(&fp, "license.txt", FA_WRITE | FA_CREATE_ALWAYS);
+				f_puts("Borra este fichero para desactivar el Autoboot", &fp);
+				f_puts("\n", &fp);
+				f_puts("Delete this file to Disable Autoboot", &fp);
+				f_close(&fp);
 	}
 
-	if(param == 21)
-	{
-	display_backlight_brightness(1, 1000);
-	sd_save_to_file("", 0, "syslite.bk");
-	launch_payload("atmosphere/boot_menu/bin/zbackup.bin");
-	return 0;
-	}
+//https://www.fullserieshd.com/series/descargar-serie-virtual-hero-por-mega/
 
-	if(param == 22)
-	{
-	display_backlight_brightness(1, 1000);
-	sd_save_to_file("", 0, "boot.bk");
-	launch_payload("atmosphere/boot_menu/bin/zbackup.bin");
-	return 0;
-	}
-
-	if(param == 23)
-	{
-	display_backlight_brightness(1, 1000);
-	sd_save_to_file("", 0, "emummc.bk");
-	launch_payload("atmosphere/boot_menu/bin/zbackup.bin");
-	return 0;
-	}
-
-
-	//summom option menu
-	if(param == 9){
-	display_backlight_brightness(50, 1000);
-	main_menu = 1;
-	gui_init_argon_menu();
-	return 0;}
-
-	//check if is the same menu
-	if(submenu == param)
-	return 0;
-
-//set menu number
-submenu = param;
-gui_init_argon_menu();
+if(sd_file_exists("device.keys"))
+launch_payload("atmosphere/boot_menu/bin/Atmosphere.bin");
+else
+launch_payload("atmosphere/boot_menu/bin/Lockpick_RCM.bin");
 return 0;
 }
 
@@ -353,7 +251,7 @@ if (!sd_mount()){BootStrapNX();}//check sd
 	u32 size = f_size(&op);
 	f_close(&op);
 	sd_save_to_file(payload_wo_bin,size,"emummc/emummc.ini");
-	retir = 2;
+	retir = 1;
 	}
 
 	if(param == 0)
@@ -365,7 +263,7 @@ if (!sd_mount()){BootStrapNX();}//check sd
 	u32 size = f_size(&op);
 	f_close(&op);
 	sd_save_to_file(payload_wo_bin,size,"emummc/emummc.ini");
-	retir = 1;
+	retir = 0;
 	}
 
 gfx_swap_buffer(&g_gfx_ctxt);
